@@ -1,17 +1,17 @@
-## Shell Autocompletion
+## Autocompletar con Shell
 
-You can generate autocompletion shell scripts for `bash`, `elvish`, `fish`, `powershell`, and `zsh`.
+Es posible generar scripts de shell que completen de forma automática los parámetros en `bash`, `elvish`, `fish`, `powershell`, y `zsh`.
 
 ### zsh
 
-First, ensure that the following is present somewhere in your `~/.zshrc` file (if not, add it):
+Primero, el lector debe asegurarse de que, en algun lado de su dispositivo, se encuente el archivo `~/.zshrc` (en caso de no estar, agreguelo):
 
 ```sh
 autoload -U compinit
 compinit -i
 ```
 
-Then run:
+Despues ejecute lo siguiente:
 
 ```sh
 forge completions zsh > /usr/local/share/zsh/site-functions/_forge
@@ -19,7 +19,7 @@ cast completions zsh > /usr/local/share/zsh/site-functions/_cast
 anvil completions zsh > /usr/local/share/zsh/site-functions/_anvil
 ```
 
-For ARM-based systems:
+Para sistemas basados en ARM:
 
 ```sh
 forge completions zsh > /opt/homebrew/completions/zsh/_forge

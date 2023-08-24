@@ -1,24 +1,22 @@
-## Static Analyzers
+## Análisis Estático 
 
 ### Slither
 
-To test your project using [slither](https://github.com/crytic/slither), here is a sample `slither.config.json`:
+Teste su proyecto usando [slither](https://github.com/crytic/slither), acá encontramos  un ejemplo simple de `slither.config.json`:
 
 ```json
 {
   "filter_paths": "lib"
 }
 ```
-
-To run Slither on the entire project, you can use this command:
+Para ejecutar Slither en la totalidad del proyecto, use el siguiente comando:
 
 ```sh
 slither .
 ```
+No es necesario que se provean los `remappings` a traves de la opcion `solc_remaps`, esto se debe a que Slither es capaz de detectar de forma automatica los `remappings` en los proyectos de Foundry. Slither ejecuta el comando `forge` para montar el proyecto.
 
-You do not need to provide remappings via the `solc_remaps` option as Slither will automatically detect remappings in a Foundry project. Slither will invoke `forge` to perform the build.
-
-However, if you want to analyze a specific `.sol` file, then you do need to provide remappings:
+No obstante, si lo que el lector busca es hacer un análisis más específico, como podría ser el caso de un archivo específico `.sol`, ahí este debe proveer los `remappings`:
 
 ```json
 {
@@ -28,8 +26,7 @@ However, if you want to analyze a specific `.sol` file, then you do need to prov
   ]
 }
 ```
-
-And you also need to update the `solc` compiler used by Slither to the same version used by Forge with `solc-select`:
+También es importante mantener el compilador `solc` actualizado así coincide con la versión utilizada por Forge con `solc-select`:
 
 ```sh
 pip3 install slither-analyzer
@@ -39,9 +36,10 @@ solc-select use 0.8.13
 slither .
 ```
 
-See the [Slither wiki](https://github.com/crytic/slither/wiki/Usage) for more information.
 
-In order to use a custom configuration, such as the sample `slither.config.json` mentioned above, the following command is used as mentioned in the [slither-wiki](https://github.com/crytic/slither/wiki/Usage#configuration-file). By default slither looks for the `slither.config.json` but you can define the path and any other `json` file of your choice:
+Para obtener más información, visite la [wiki de Slither](https://github.com/crytic/slither/wiki/Usage).
+
+Para que el lector pueda utilizar una configuración personalizada, como puede ser el caso del ejemplo `slither.config.json` que se menciona arriba, el siguiente comando se usa como se especifica en la [slither-wiki](https://github.com/crytic/slither/wiki/Usage#configuration-file). Por defecto, slither busca el archivo `slither.config.json` pero usted como usuario puede definir un `path` diferente y otorgarle a otro archivo `json` la responsabilidad de guardar la configuración :
 
 ```sh
 slither --config-file <path>/file.config.json .
@@ -62,11 +60,11 @@ Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#public-
 Counter.sol analyzed (1 contracts with 78 detectors), 4 result(s) found
 ```
 
-Slither also has a [GitHub Action](https://github.com/marketplace/actions/slither-action) for CI/CD.
+Slither también tiene [GitHub Action](https://github.com/marketplace/actions/slither-action) para CI/CD.
 
 ### Mythril
 
-To test your project using [mythril](https://github.com/ConsenSys/mythril), here is a sample `mythril.config.json`:
+Para crear test de su proyecto usando [mythril](https://github.com/ConsenSys/mythril), aquí le dejamos un ejemplo `mythril.config.json`:
 
 ```json
 {
@@ -81,7 +79,7 @@ To test your project using [mythril](https://github.com/ConsenSys/mythril), here
 }
 ```
 
-Note, you need switch `rustc` to nightly to install `mythril`:
+Nota, el lector debe cambiar el compilador `rustc` a `nightly` para instalar `mythril`:
 
 ```ignore
 rustup default nightly
@@ -89,9 +87,9 @@ pip3 install mythril
 myth analyze src/Contract.sol --solc-json mythril.config.json
 ```
 
-See the [mythril docs](https://mythril-classic.readthedocs.io/en/develop/) for more information.
+Para obtener más información, visite la [documentación de mythril](https://mythril-classic.readthedocs.io/en/develop/).
 
-You can pass custom Solc compiler output to Mythril using the `--solc-json` flag. For example:
+Una cualidad interesante de `mythril` es que el lector puede pasar la versión del compilador Solc, esto se logra usando `--solc-json`. Un ejemplo de esto puede ser el siguiente:
 
 ```bash
 $ myth analyze src/Counter.sol --solc-json mythril.config.json
@@ -116,5 +114,4 @@ Query count: 61
 Solver time: 3.6820807456970215
 The analysis was completed successfully. No issues were detected.
 ```
-
-The findings will be listed at the end of this output if any. Since the default `Counter.sol` doesn't have any logic, `mythx` reports that no issues were found.
+En caso de que los haya,todos los hallazgos realizados por dicha herramienta van a estar en una lista al final del `output`. Como el contrato por defecto, `Counter.sol` no tiene ninguna lógica adherida, `mythx` reporta que no es posible encontrar porblemas en el código.
