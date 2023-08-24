@@ -1,96 +1,88 @@
-## Installation
+## Instalación
 
-If you face any issues while installing, check out the [FAQ](../faq.md).
+Si encuentras algún problema durante la instalación, consulta la [FAQ](../faq.md).
 
-### Precompiled binaries
+### Binarios precompilados
 
-Precompiled binaries are available from the [GitHub releases page](https://github.com/foundry-rs/foundry/releases).
-These are better managed by using [Foundryup](#using-foundryup).
+Los binarios están disponibles directamente desde la [página de las versiones en GitHub ](https://github.com/foundry-rs/foundry/releases).
+Dischos binarios son mejor gestionadas utilizando [Foundryup](#using-foundryup).
 
-### Using Foundryup
+### Utilizando Foundryup
+Foundryup es el instalador del set de herramientas de Foundry. Podés encontrar mas informacion sobre el tema [aquí](https://github.com/foundry-rs/foundry/blob/master/foundryup/README.md).
 
-Foundryup is the Foundry toolchain installer. You can find more about it [here](https://github.com/foundry-rs/foundry/blob/master/foundryup/README.md).
-
-Open your terminal and run the following command:
+Abrí tu terminal y ejecutar el siguiente comando:
 
 ```sh
 curl -L https://foundry.paradigm.xyz | bash
 ```
+Esto va a instalar Foundryup, después, simplemente seguí las instrucciones que aparecen en pantalla, 
+esto va a volver disponible el comando `foundryup` en tu CLI.
 
-This will install Foundryup, then simply follow the instructions on-screen,
-which will make the `foundryup` command available in your CLI.
+Al ejecutar el comando `foundryup`, se va a instalar la ultima versión (nocturna?) [binarios precompilados](#precompiled-binaries): `forge`, `cast`, `anvil`, y `chisel`.
+Para obtener más opciones, utilizá `foundryup --help`, como puede ser el caso de que se quiera instalar una version especifica del comando un un `commit` particular.
 
-Running `foundryup` by itself will install the latest (nightly) [precompiled binaries](#precompiled-binaries): `forge`, `cast`, `anvil`, and `chisel`.
-See `foundryup --help` for more options, like installing from a specific version or commit.
-
-> ℹ️ **Note**
+> ℹ️ **Nota**
 >
-> If you're on Windows, you will need to install and use [Git BASH](https://gitforwindows.org/) or [WSL](https://learn.microsoft.com/en-us/windows/wsl/install),
-> as your terminal, since Foundryup currently does not support Powershell or Cmd.
+> Si estas instalando desde Windows, vas a necesitar ysar (e instalar) [Git BASH](https://gitforwindows.org/) o [WSL](https://learn.microsoft.com/en-us/windows/wsl/install),
+> como tu terminal, esto se debe a que al momento de la fecha, Foundryup no tiene soporte para Powershell o Cmd.
 
-### Building from source
+### Instalando desde la fuente
 
-#### Prerequisites
+#### Prerequisitos
+Vas a necesitar el compilador de  [Rust](https://rust-lang.org) y Cargo, siendo este el controlador de paquetes de Rust.
+La manera más sencilla de instalar ambos es usando  [`rustup.rs`](https://rustup.rs/).
 
-You will need the [Rust](https://rust-lang.org) compiler and Cargo, the Rust package manager.
-The easiest way to install both is with [`rustup.rs`](https://rustup.rs/).
+Para Windows, vas a necesitar la versión más reciente de [Visual Studio](https://visualstudio.microsoft.com/downloads/), instalada con el "Desktop Development With C++" como extensión descargada.
 
-On Windows, you will also need a recent version of [Visual Studio](https://visualstudio.microsoft.com/downloads/),
-installed with the "Desktop Development With C++" Workloads option.
+#### Construcción
 
-#### Building
-
-You can either use the different [Foundryup](#using-foundryup) flags:
+Podés optar por usar una versión diferente de [Foundryup](#using-foundryup):
 
 ```sh
 foundryup --branch master
 foundryup --path path/to/foundry
 ```
-
-Or, by using a single Cargo command:
+O, usando un simple comando de Cargo:
 
 ```sh
 cargo install --git https://github.com/foundry-rs/foundry --profile local forge cast chisel anvil
 ```
-
-Or, by manually building from a local copy of the [Foundry repository](https://github.com/foundry-rs/foundry):
+O, manualmente construyendolo desde una copia local del [Repositorio de Foundry](https://github.com/foundry-rs/foundry):
 
 ```sh
-# clone the repository
+# Clona el Repositorio
 git clone https://github.com/foundry-rs/foundry.git
 cd foundry
-# install Forge
+# Instala Forge
 cargo install --path ./crates/forge --profile local --force
-# install Cast
+# Instala Cast
 cargo install --path ./crates/cast --profile local --force
-# install Anvil
+# Instala Anvil
 cargo install --path ./crates/anvil --profile local --force
-# install Chisel
+# Instala Chisel
 cargo install --path ./crates/chisel --profile local --force
 ```
 
-### Installing for CI in Github Action
+### Instalando para CI en  Github Action
 
-See the [foundry-rs/foundry-toolchain](https://github.com/foundry-rs/foundry-toolchain) GitHub Action.
+Véase [foundry-rs/foundry-toolchain](https://github.com/foundry-rs/foundry-toolchain) GitHub Action.
 
-### Using Foundry with Docker
+### Usando Foundry con Docker
 
-Foundry can also be used entirely within a Docker container. If you don't have it, Docker can be installed directly from [Docker's website](https://docs.docker.com/get-docker/).
+Foundry puede ser utilizado dentro de un contenedor de Docker. Si no lo tenés, Docker se puede instalar directo de la [web de Docker](https://docs.docker.com/get-docker/).
 
-Once installed, you can download the latest release by running:
+Una vez instalado, podés instalar la ultima versión utilizando el siguiente comando:
 
 ```sh
 docker pull ghcr.io/foundry-rs/foundry:latest
 ```
-
-It is also possible to build the docker image locally. From the Foundry repository, run:
-
+También es posible construir una representación local de docker. Desde la carpeta de Foundry, corré lo siguiente:
 ```sh
 docker build -t foundry .
 ```
 
-For examples and guides on using this image, see the [Docker tutorial section](../tutorials/foundry-docker).
+Para más ejemplos y guias de como usar esta representación, revisa la [sección de tutoriales de Docker](../tutorials/foundry-docker).
 
-> ℹ️ **Note**
+> ℹ️ **Nota**
 >
-> Some machines (including those with M1 chips) may be unable to build the docker image locally. This is a known issue.
+> Algunos equipos(incluidos aquellos que llevan el chip M1), puede que no sean capaces de montar la representación local de docker. Este es un problema frecuente.

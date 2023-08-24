@@ -1,30 +1,30 @@
-## Overview of Cast
+## Visión general de Cast
 
-Cast is Foundry's command-line tool for performing Ethereum RPC calls. You can make smart contract calls, send transactions, or retrieve any type of chain data - all from your command-line!
+Cast es la herramienta de línea de comandos de Foundry para realizar llamadas RPC de Ethereum. Podes hacer llamadas a contratos inteligentes, enviar transacciones o recuperar cualquier tipo de datos de la cadena, ¡todo desde tu línea de comandos
 
-### How to use Cast
 
-To use Cast, run the [`cast`](../reference/cast/cast.md) command followed by a subcommand:
+### Cómo usar Cast
+
+Para usar cast, simplemente escribí el comando  [`cast`](../reference/cast/cast.md) seguido por un sub-comando:
 
 ```bash
-$ cast <subcommand>
+$ cast <subcomando>
 ```
 
-#### Examples
+#### Ejemplo
 
-Let's use `cast` to retrieve the total supply of the DAI token:
+Usemos `cast` para obtener la cantidad en circulacion, o `total supply`, del token DAI :
 
 ```bash
 {{#include ../output/cast/cast-call:all}}
 ```
 
-`cast` also provides many convenient subcommands, such as for decoding calldata:
+`cast` también proporciona muchos subcomandos convenientes, como puede ser el caso de decodificar la informacion de calldata:
 
 ```bash
 {{#include ../output/cast/cast-4byte-decode:all}}
 ```
-
-You can also use `cast` to send arbitrary messages. Here's an example of sending a message between two Anvil accounts.
+Además, puedes usar `cast` para enviar mensajes arbitrarios. Aquí tienes un ejemplo de cómo enviar un mensaje entre dos cuentas de Anvil.
 
 ```bash
 $ cast send --private-key <Your Private Key> 0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc $(cast from-utf8 "hello world") --rpc-url http://127.0.0.1:8545/
@@ -32,6 +32,6 @@ $ cast send --private-key <Your Private Key> 0x3c44cdddb6a900fa2b585dd299e03d12f
 
 <br>
 
-> 📚 **Reference**
-> 
-> See the [`cast` Reference](../reference/cast/) for a complete overview of all the available subcommands.
+> 📚 **Referencia**
+>
+> Para obtener más información, consulta la [Referencia de `cast`](../reference/cast/),donde se encuentra una revisión de todos los comandos y subcomandos disponibles.

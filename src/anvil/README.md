@@ -1,31 +1,31 @@
-## Overview of Anvil
+## Visión general de Anvil
 
-Anvil is a local testnet node shipped with Foundry. You can use it for testing your contracts from frontends or for interacting over RPC.
+Anvil es una `testnet` local que viene por defecto incluida en Foundry. Esto te permite testear contratos desde tu frontend o inclusive interactuar con otras RPCs.
 
-Anvil is part of the Foundry suite and is installed alongside `forge`, `cast`, and `chisel`. If you haven't installed Foundry yet, see [Foundry installation](../getting-started/installation.md). 
+Anvil es parte de la suite de Foundry y viene instalada junto a `forge`, `cast`, y `chisel`. Si aún no has instalado Foundry, cunsulta [Instalación de Foundry](../getting-started/installation.md). 
 
-> Note: If you have an older version of Foundry installed, you'll need to re-install `foundryup` in order for Anvil to be downloaded.
+> Nota: Si tenés una versión más antigua de Foundry instalada, necesitás volver a instalar `foundryup` para que Anvil se descargue.
 
-### How to use Anvil
+### Cómo usar Anvil
 
-To use Anvil, simply type `anvil`. You should see a list of accounts and private keys available for use, as well as the address and port that the node is listening on. 
+Para usar Anvil, simplemente escribí `anvil`. Deberías ver una lista de cuentas y claves privadas disponibles para su uso, así como la dirección y el puerto en el que el nodo está escuchando."
 
-Anvil is highly configurable. You can run `anvil -h` to see all the configuration options.
+Anvil es altamente configurable. Puedes ejecutar `anvil -h` para ver todas las opciones de configuración.
 
-Some basic options are:
+Algunas opciones básicas son:
 
 ```bash
-#  Number of dev accounts to generate and configure. [default: 10]
-anvil -a, --accounts <ACCOUNTS>
+# Número de cuentas de desarrollo para generar y configurar. [valor por defecto: 10]
+anvil -a, --accounts <CUENTAS>
 
-# The EVM hardfork to use. [default: latest]
-anvil --hardfork <HARDFORK>
+# La bifurcación dura de EVM a utilizar. [valor por defecto: última]
+anvil --hardfork <BIFURCACIÓN>
 
-# Port number to listen on. [default: 8545]
-anvil  -p, --port <PORT>
+# Número de puerto en el que escuchar. [valor por defecto: 8545]
+anvil -p, --port <PUERTO>
 ```
 
-> 📚 **Reference**
+> 📚 **Referencia**
 >
-> See the [`anvil` Reference](../reference/anvil/) for in depth information on Anvil and its capabilities.
+> Para obtener más información ,consulta la [Referencia de `anvil` ](../reference/anvil/)donde se detalla en profundidad las capacidades de Anvil.
 

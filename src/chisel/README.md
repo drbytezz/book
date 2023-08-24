@@ -1,23 +1,20 @@
-## Overview of Chisel
+## Visión general de Chisel
 
-Chisel is an advanced Solidity REPL shipped with Foundry. It can be used to quickly test the behavior of Solidity snippets
-on a local or forked network.
+Chisel es un REPL avanzado, el cual viene incluido en Foundry. Se puede usar para hacer test rápidos sobre el comportamiento de algun fragmentos de Solidity tanto en una red local como en un fork de red.
 
-Chisel is part of the Foundry suite and is installed alongside `forge`, `cast`, and `anvil`. If you haven't installed Foundry
-yet, see [Foundry installation](../getting-started/installation.md). 
+Chisel es parte de la suite de Foundry y viene instalada junto a  `forge`, `cast`, y `anvil`. Si aún no has instalado Foundry, cunsulta [Instalación de Foundry](../getting-started/installation.md). 
 
-> Note: If you have an older version of Foundry installed, you'll need to re-install `foundryup` in order for Chisel to be downloaded.
+> Nota: Si tenés una versión más antigua de Foundry instalada, necesitás volver a instalar `foundryup` para que Chisel se descargue.
 
-### How to use Chisel
+### Cómo usar Chisel
 
-To use Chisel, simply type `chisel`. From there, start writing Solidity code! Chisel will offer verbose feedback on each input.
+Para usar Anvil, simplemente escribí  `chisel`. A partir de eso, podés comenzar escribiendo líneas de Solidity en la consola! Chisel te devuelve una versión muy verbosa acompañada de un feedback con cada input.
 
-Chisel can be used both within and outside of a foundry project. If the binary is executed in a Foundry project root, Chisel will
-inherit the project's configuration options.
+Chisel puede ser usado tanto dentro de un proyecto de Foundry, como también fuera de uno. Si el archivo binario es ejecutado dentro de un proyecto de foundry, Chisel va a heredar toda las opciones de configuración del proyecto.
 
-To see available commands, type `!help` within the REPL.
+Para ver todos los comandos incluidos, escribí en el REPL `!help`.
 
-> 📚 **Reference**
+> 📚 **Referencia**
 >
-> See the [`chisel` Reference](../reference/chisel/) for in depth information on Chisel and its capabilities.
+> Para obtener más información ,consulta la [Referencia de `chisel` ](../reference/chisel/)donde se detalla en profundidad las capacidades de Anvil.
 
