@@ -1,8 +1,8 @@
-## Continuous Integration
+## Integración Continua
 
 ### GitHub Actions
 
-To test your project using GitHub Actions, here is a sample workflow:
+Es posible hacer los test de tu proyecto usando Github Actions, acá dejamos un ejemplo del `workflow`:
 
 ```yml
 on: [push]
@@ -28,8 +28,7 @@ jobs:
 ```
 
 ### Travis CI
-
-To test your project using Travis CI, here is a sample workflow:
+También es posible realizar los tests usando Travis CI, acá dejamos un ejemplo del `workflow`:
 
 ```yml
 language: rust
@@ -49,8 +48,8 @@ script:
 
 ## GitLab CI
 
-To test your project using GitLab CI, here is a sample workflow:
-Note: check out [Policy](https://docs.gitlab.com/runner/executors/docker.html#how-pull-policies-work) to fetch the remote image
+Para realizar test usando GitLab CI, acá dejamos un ejemplo del `workflow`:
+Nota: revisar las [política de uso](https://docs.gitlab.com/runner/executors/docker.html#how-pull-policies-work) para obtener una representacón remota.
 
 ```yml
 variables:

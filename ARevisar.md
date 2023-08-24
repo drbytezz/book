@@ -11,3 +11,5 @@ Los largos, como por ejemplo, los cheatcodes van despues
 - cast[ok]
 - chisel[ok]
 - getting-started[ok]
+- config []
+- forge []

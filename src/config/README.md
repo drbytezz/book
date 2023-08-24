@@ -1,12 +1,12 @@
-## Configuring with `foundry.toml`
+## Configurando con `foundry.toml`
 
-Forge can be configured using a configuration file called `foundry.toml`, which is placed in the root of your project.
+Forge se puede configurar utilizando un archivo de configuración llamado `foundry.toml`, que se coloca en la raíz de tu proyecto.
 
-Configuration can be namespaced by profiles. The default profile is named `default`, from which all other profiles inherit. You are free to customize the `default` profile, and add as many new profiles as you need.
+Podemos organizar la configuración por perfiles. El perfil predeterminado se llama `default`, del cual heredan todos los demás perfiles. Eres libre de personalizar el perfil `default` y agregar tantos perfiles nuevos como sean necesarios.
 
-Additionally, you can create a global `foundry.toml` in your home directory.
+Además, el lector puede crear un archivo global `foundry.toml` que este en la carpeta base.
 
-Let's take a look at a configuration file that contains two profiles: the default profile, which always enables the optimizer, as well as a CI profile, that always displays traces:
+Echemos un vistazo a un archivo de configuración que contiene dos perfiles: el perfil predeterminado, que siempre habilita el optimizador, y un perfil de CI, que siempre muestra trazas:
 
 ```toml
 [profile.default]
@@ -17,18 +17,18 @@ optimizer_runs = 20_000
 verbosity = 4
 ```
 
-When running `forge`, you can specify the profile to use using the `FOUNDRY_PROFILE` environment variable.
+Cuando ejecutamos el comando `forge`, el lector puede especificar con que perfil este desea ejecutarlo, esto se logra usando la variable de ambiente `FOUNDRY_PROFILE` .
 
-### Standalone sections
+### Secciones independientes
 
-Besides the profile sections, the configuration file can also contain standalone sections (`[fmt]`, `[fuzz]`, `[invariant]` etc). By default, each standalone section belongs to the `default` profile.
-i.e. `[fmt]` is equivalent to `[profile.default.fmt]`.
+Además de las secciones de perfil, el archivo de configuración también puede contener secciones independientes ([fmt], [fuzz], [invariant], etc.). Por defecto, cada sección independiente pertenece al perfil default.
+es decir, [fmt] es equivalente a [profile.default.fmt].
 
-To configure the standalone section for different profiles other than `default`, use syntax `[profile.<profile name>.<standalone>]`.
+Para configurar alguna de las secciones, ya sea en terminos generales(`default`) o para perfiles especificos, usa el siguiente sintaxis `[profile.<profile name>.<standalone>]`.
 i.e. `[profile.ci.fuzz]`.
 
 <br>
 
-> 📚 **Reference**
+> 📚 **Referencia**
 > 
-> See the [`foundry.toml` Reference](../reference/config/) for a complete overview of what you can configure.
+> Consulta la  [Referencia de `foundry.toml`](../reference/config/) para tener un pantallazo general de los parametros que se pueden configurar.

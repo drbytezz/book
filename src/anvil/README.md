@@ -27,5 +27,5 @@ anvil -p, --port <PUERTO>
 
 > 📚 **Referencia**
 >
-> Para obtener más información ,consulta la [Referencia de `anvil` ](../reference/anvil/)donde se detalla en profundidad las capacidades de Anvil.
+> Para obtener más información, consulta la [Referencia de `anvil` ](../reference/anvil/)donde se detalla en profundidad las capacidades de Anvil.
 

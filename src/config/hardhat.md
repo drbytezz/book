@@ -1,35 +1,36 @@
-## Integrating with Hardhat
+## Integración con Hardhat
 
-It's possible to have your Foundry project work alongside [Hardhat](https://hardhat.org/). This assumes that you have a working Foundry project and want to add Hardhat. It also assumes familiarity with Hardhat.
+Es posible tener un proyecto de Foundry que trabaje a la par con uno de[Hardhat](https://hardhat.org/). Para lograr lo ya mencionado, se asume que se tiene un proyecto de Foundry funcional y a este se le quiere agregar Hardhat. Además, asume que el usuario tenga cierta familiaridad con Hardhat.
 
-### Why does this not work out of the box?
+### ¿Por qué no funciona de manera predeterminada?
 
-Hardhat by default expects libraries to be installed in `node_modules`, the default folder for all NodeJS dependencies. Foundry expects them to be in `lib`. Of course [we can configure Foundry](../reference/config/overview.md) but not easily to the directory structure of `node_modules`.
+Esto se debe a que Hardhat, por defecto espera que las librerias sean instaladas en la carpeta `node_modules`, siendo esta la carpeta default de todos los proyectos NodeJS dependencies. Por otra parte,  Foundry espera que dichas librerias estén bajo la carpeta `lib`. Por suerte, [podemos configurar Foundry](../reference/config/overview.md), pero presenta ciertos obstaculos cuando hablamos de compatibilizar con la estructura de `node_modules`.
 
-For this reason, the recommended setup is to use [hardhat-preprocessor](https://www.npmjs.com/package/hardhat-preprocessor). Hardhat-preprocessor is, as the name suggests, a Hardhat plugin which allows us to preprocess our contracts before they are run through the Solidity compiler.
+Por esta razón, se recomienda el uso del [hardhat-preprocessor](https://www.npmjs.com/package/hardhat-preprocessor). Hardhat-preprocessor es, tal y como lo sugiere su nombre, un plugin de Hardhat que nos permite pre-procesar los contratos antes de que corran bajo el manto del compilador de Solidity .
 
-We use this to modify the import directives in our Solidity files to resolve absolute paths to the libraries based on the Foundry `remappings.txt` file before Hardhat attempts to compile them. This of course just happens in memory so your actual Solidity files are never changed. Now, Hardhat is happy to comply and compiles using the libraries you installed with Foundry.
+Usamos esto para modificar la forma en que importamos nuestras directivas en los archivos de Solidity y así resolver las rutas absolutas a las bibliotecas según el archivo `remappings.txt` de Foundry, antes de que Hardhat intente compilarlos. Esto, por supuesto, ocurre solo en la memoria, por lo que tus archivos de Solidity reales nunca se modifican. Ahora, Hardhat está "contento" de cumplir y compilar utilizando las bibliotecas que instalaste con Foundry.
 
-### Just show me the example repo!
+### Mostrame el repositorio de ejemplo!
 
-[Enjoy!](https://github.com/foundry-rs/hardhat-foundry-template)
+[Disfruta pa!](https://github.com/foundry-rs/hardhat-foundry-template)
 
-If you want to adapt this to a Foundry project you already have or learn how it works, read below:
+Si gustas de adaptar esto a un proyecto de Foundry que ya tenés o aprender cómo funciona, lee las instrucciones que siguen a continuación:
 
-### Instructions
+### Instrucciones
 
-Inside your Foundry project working directory:
+Dentro de  tu proyecto de Foundry:
 
-1. `npm init` - Setup your project details as usual.
-2. `npm install --save-dev hardhat` - Install Hardhat.
-3. `npx hardhat` - Setup your Hardhat project as you see fit in the same directory.
-4. `forge remappings > remappings.txt` - You will need to re-run this every time you modify libraries in Foundry.
+1. `npm init` - Configura los detalles del proyecto, como normalmente lo haces.
+2. `npm install --save-dev hardhat` - Instala Hardhat.
+3. `npx hardhat` - Configura tu proyecto de Hardhat para que quede en la misma carpeta.
+4. `forge remappings > remappings.txt` - Vas a necesitar ejecutar este comando cada vez que modifiques las librerias en Foundry.
 
-Now you need to make the following changes to your Hardhat project. The following assumes a TypeScript setup:
+Ahora bien, asegurate de hacer lso siguientes cambios en el proyecto de Hardhat.
+Asumimos que tu configuracion se basa en TypeScript:
 
-1. `npm install --save-dev hardhat-preprocessor` - [Details on hardhat-preprocessor](https://www.npmjs.com/package/hardhat-preprocessor)
-2. Add `import "hardhat-preprocessor";` to your `hardhat.config.ts` file.
-3. Ensure the following function is present (you can add it to your `hardhat.config.ts` file or somewhere else and import it - also ensure `import fs from "fs";` is present in the file it is added):
+1. `npm install --save-dev hardhat-preprocessor` - [Detalles del hardhat-preprocessor](https://www.npmjs.com/package/hardhat-preprocessor)
+2. Agrega `import "hardhat-preprocessor";` a tu archivo `hardhat.config.ts`.
+3. Asegurate de que la siguente función este presente (podes agregarla a tu archivo `hardhat.config.ts` o en algun otro lugar e importarla - además asegurate de que `import fs from "fs";` este presente en el archivo al que se agrego la funcion):
 
 ```typescript
 function getRemappings() {
@@ -41,9 +42,9 @@ function getRemappings() {
 }
 ```
 
-*Thanks to [@DrakeEvansV1](https://twitter.com/drakeevansv1) and [@colinnielsen](https://github.com/colinnielsen) for this snippet*
+*Gracias a [@DrakeEvansV1](https://twitter.com/drakeevansv1) y [@colinnielsen](https://github.com/colinnielsen) por este fragmento*
 
-4. Add the following to your exported `HardhatUserConfig` object:
+4. Agrega lo siguiente al archivo que exportaste el objeto `HardhatUserConfig`:
 
 ```typescript
 ...
@@ -68,25 +69,24 @@ paths: {
 },
 ...
 ```
+Ahora, Hardhat debería funcionar de forma correcta con Foundry. Ahora, el lector puede realizar test y scripts tanto en Foundry como en Hardhat manteniendo el acceso a sus contratos.
 
-Now, Hardhat should work well with Foundry. You can run Foundry tests or Hardhat tests / scripts and have access to your contracts.
+### Usando Foundry en un proyecto ya existente de Hardhat
 
-### Use Foundry in an existing Hardhat project
+Supongamos que el lector ya tiene un proyecto en Hardhat con algunas dependencias, como puede ser el caso de `@OpenZeppelin/contracts` en la carpeta `node_modules/`. 
 
-Suppose that you already have a Hardhat project with some dependencies such as `@OpenZeppelin/contracts` in directory `node_modules/`. 
+Podés activar Foundry para realizar los test en solo 4 pasos:
 
-You can use Foundry test in this project in 4 steps.
+Antes de empezar, observemos las carpetas:
 
-Before we start, let's take a look at the directories: 
+- Los Contratos están en `contracts`
+- La unidad de test de Hardhat están en `test`, y nuestros test de Foundry se encuentran en `test/foundry`
+- Hardhat guarda su cache en `cache`, y el cache resultante de Foundry lo vamos a poner en `forge-cache`
 
-- Contracts are in `contracts`
-- Hardhat unit test is in `test`, and we will put Foundry test files in `test/foundry`
-- Hardhat puts its cache in `cache`, and we will put Foundry cache in `forge-cache`
+### 4 pasos para agregar los test de Foundry 
 
-### 4 steps to add Foundry test
-
-1. Copy `lib/forge-std` from a newly-created empty Foundry project to this Hardhat project directory. A note: you can also run `forge init --force` to init a Foundry project in this non-empty directory and remove unneeded directories created by Foundry init.
-2. Copy `foundry.toml` configuration to this Hardhat project directory and change `src`, `out`, `test`, `cache_path` in it:
+1. Copia `lib/forge-std` desde un proyecto nuevo de foundry y pegalo en esta carpeta, la cual contiene el proyecto de Hardhat. Nota: es posible hacer esto ejecutando el comando `forge init --force` para iniciar un proyecto de Foundry en esta carpeta, que no está vacía, y elimina aquellas carpetas que no sean necesarias que son creadas por Foundry init.
+2. Copia siguente  configuración a tu archivo `foundry.toml` en este proyecto de Hardhat y modifica los siguientes campos`src`, `out`, `test`, `cache_path`:
 
 ```toml
 [profile.default]
@@ -96,23 +96,24 @@ libs = ['node_modules', 'lib']
 test = 'test/foundry'
 cache_path  = 'forge-cache'
 
-# See more config options https://book.getfoundry.sh/reference/config.html
+# Vease tambien mas configuración en  https://book.getfoundry.sh/reference/config.html
 ```
 
-3. Create a `remappings.txt` to make Foundry project work well with VS Code Solidity extension:
+3. Crea un archivo `remappings.txt` para hacer que el proyecto de Foundry funcione de forma correcta con la VS Code Solidity extension:
 
 ```ignore
 ds-test/=lib/forge-std/lib/ds-test/src/
 forge-std/=lib/forge-std/src/
 ```
 
-See more on `remappings.txt` and VS Code Solidity extension: [Remapping dependencies](../projects/dependencies.md?#remapping-dependencies), [Integrating with VSCode](vscode.md)
+Para mas informacion sobre`remappings.txt` y VS Code Solidity extension, vease: [Dependencias del remappings](../projects/dependencies.md?#remapping-dependencies), [Integrando con VSCode](vscode.md)
 
-4. Make a sub-directory `test/foundry` and write Foundry tests in it. 
+4. Crea un sub-directorio llamado `test/foundry` y alli escribi los test de Foundry. 
 
-Let's put the sample test file `Contract.t.sol` in this directory and run Foundry test
+Pongamos el archivo de test que veine como ejemplo, `Contract.t.sol` en esta carpeta y utilicemos el comando de test de Foundry 
 ```bash
 forge test
 ```
 
-Now, Foundry test works in this existing Hardhat project. As the Hardhat project is not touched and it can work as before.
+Ahora, los test de Foundry deben funcionar de forma simbiotica con tu proyecto de Hardhat. Como no modificamos el proyecto de Hardhat, este debería funcionar como lo hacía antes de la integracion.
+
