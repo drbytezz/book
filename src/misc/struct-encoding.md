@@ -1,6 +1,6 @@
-## Struct Encoding
+## Codificación del "Struct"
 
-Structs are user defined types that can group several variables:
+Los "Structs" son un tipo de objeto, el cual es altamente configurable, los cuales los define el usuario. En caso de que el lector tenga cierta familiaridad con otros lenguajes de programación, estos cuerpos son comparables, en cierta medida, a las clases en JS o de Python. Eso si, estos objetos se limitan pura y exclusivamente a guardar información:
 
 ```solidity
 struct MyStruct {
@@ -9,13 +9,16 @@ struct MyStruct {
 }
 ```
 
-Only the new [ABI coder v2](https://docs.soliditylang.org/en/latest/layout-of-source-files.html#abi-coder-pragma) can encode and decode arbitrarily nested arrays and structs. Since Solidity 0.8.0 it is activated by default, prior to that it needs to be activated via `pragma experimental ABIEncoderV2`.
+Solo el nuevo [ABI coder v2](https://docs.soliditylang.org/en/latest/layout-of-source-files.html#abi-coder-pragma) puede codificar y decodificar matrices y estructuras anidadas arbitrariamente. Desde la salida 0.8.0 está activado de forma predeterminada, para aplicarlo a versiones anteriores, debe activarse a través de `pragma experimental ABIEncoderV2`.
 
-Solidity structs map to the ABI type "tuple". For more information on how Solidity types map to ABI types see [Mapping Solidity to ABI types](https://docs.soliditylang.org/en/latest/abi-spec.html#mapping-solidity-to-abi-types) in the Solidity documentation.
 
-Structs are therefore encoded and decoded as tuples. So the struct we defined above, `MyStruct`, maps to the tuple `(address,uint256)` in terms of the ABI.
+Dento del ABI (Application Binary Interface), los "Struct" se asignan como si fueran del tipo "tupla". Para obtener más información sobre cómo se asignan los tipos de Solidity a los tipos ABI, consulte [Asignación de Solidity a tipos ABI](https://docs.soliditylang.org/en/latest/abi-spec.html#mapping-solidity-to-abi-types) en la documentación de Solidity.
 
-Let's see how this works in a contract:
+
+Por tanto, los "structs" se codifican y decodifican como tuplas. Entonces, la estructura que definimos anteriormente, `MyStruct`, se asigna a la tupla` (address, uint256) `en términos de ABI.
+
+
+Veamos cómo funciona esto en un contrato:
 
 ```solidity
 pragma solidity =0.8.15;
@@ -30,7 +33,7 @@ contract Test {
 }
 ```
 
-The ABI of the `f` function in this contract is:
+El ABI de la función `f` en este contrato es:
 
 ```json
 {
@@ -59,5 +62,4 @@ The ABI of the `f` function in this contract is:
 	"type": "function"
 }
 ```
-
-which reads: The function `f` takes 1 input of type `tuple` with two components of type `address` and `uint256`.
+lo que se interpreta como: La función `f` toma un parametro del tipo `tupla`, el cual debe contener dos componentes, uno del tipo `address` y otro del tipo `uint256`.

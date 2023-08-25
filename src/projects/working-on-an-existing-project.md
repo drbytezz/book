@@ -1,8 +1,8 @@
-## Working on an Existing Project
+## Trabajando en un proyecto que ya existe
 
-If you download an existing project that uses Foundry, it is really easy to get going.
+Si el lector descarga un proyecto existente que utiliza Foundry, es realmente fácil comenzar.
 
-First, get the project from somewhere. In this example, we will clone the `femplate` repository from GitHub:
+Primero, obtenga el proyecto de alguna parte. En este ejemplo, clonaremos el repositorio `femplate` de GitHub:
 
 ```sh
 $ git clone https://github.com/abigger87/femplate
@@ -10,15 +10,15 @@ $ cd femplate
 $ forge install
 ```
 
-We run [`forge install`](../reference/forge/forge-install.md) to install the submodule dependencies that are in the project.
+Ejecutamos [`forge install`](../reference/forge/forge-install.md) para instalar las dependencias del submódulo que están en el proyecto.
 
-To build, use [`forge build`](../reference/forge/forge-build.md):
+Para compilar, utilice [`forge build`](../reference/forge/forge-build.md):
 
 ```sh
 {{#include ../output/femplate/forge-build:all}}
 ```
 
-And to test, use [`forge test`](../reference/forge/forge-test.md):
+Y para testear, utilice [`forge test`](../reference/forge/forge-test.md):
 
 ```sh
 {{#include ../output/femplate/forge-test:all}}

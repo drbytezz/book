@@ -1,19 +1,20 @@
-## Project Layout
+## Diseñando un proyecto
 
-Forge is flexible on how you structure your project. By default, the structure is:
+Forge es una herramienta flexible al momento de diseñar tu proyecto. Por defecto, la estructura es:
 
 ```ignore
 {{#include ../output/hello_foundry/tree-with-files:output}}
 ```
 
-- You can configure Foundry's behavior using `foundry.toml`.
-- Remappings are specified in `remappings.txt`.
-- The default directory for contracts is `src/`.
-- The default directory for tests is `test/`, where any contract with a function that starts with `test` is considered to be a test.
-- Dependencies are stored as git submodules in `lib/`.
+- El lector puede configurar el comportamiento de Foundry desde el archivo `foundry.toml`.
+- Los "remappings" se especifican en `remappings.txt`.
+- La carpeta por defecto donde se encuentran los contratos es `src/`.
+- La carpeta por defecto donde se encuentran  `test/`, dondo para todo contrato que contenga alguna funcion con un prefijo `test`, se lo considera un test.
+- Las dependencias se guardan como  submodulos de git en  `lib/`.
 
-You can configure where Forge looks for both dependencies and contracts using the `--lib-paths` and `--contracts` flags respectively. Alternatively you can configure it in `foundry.toml`.
 
-Combined with remappings, this gives you the flexibility needed to support the project structure of other toolchains such as Hardhat and Truffle.
+El lector puede configurar dónde busca Forge tanto las dependencias como los contratos utilizando los indicadores `--lib-tools` y` --contracts` respectivamente. Alternativamente, es posible configurarlo en `foundry.toml`.
 
-For automatic Hardhat support you can also pass the `--hh` flag, which sets the following flags: `--lib-paths node_modules --contracts contracts`.
+Combinado con "remappings", esto le da al lector la flexibilidad necesaria para respaldar la estructura del proyecto de otras herramientas como Hardhat y Truffle.
+
+Para obtener compatibilidad automática con Hardhat, también puede pasar el indicador `--hh`, que establece los siguientes indicadores:` --lib-External node_modules --contracts development`.

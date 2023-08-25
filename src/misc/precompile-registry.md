@@ -1,10 +1,11 @@
-## Precompile Registry
+## Registro de los precompilados
 
-Precompiles are special contracts at fixed addresses that are included within the EVM. In addition to common precompiles included with other EVM environments, Foundry includes a few precompiles for environment mutation, logging data, and contract deployment.
+Los precompilados son contratos especiales en direcciones ('addresses') fijas que se incluyen dentro del EVM. Además de los precompilados comunes incluidas con otros entornos EVM, Foundry incluye algunas precompilados para la manipulación del entorno, el registro de datos y la implementación de contratos.
 
-Note that, while some chains like Optimism have bytecode deployed at a predetermined address, making them 'pre-deploys', we treat them as precompiles within the context of Foundry.
+El lector debe tener en cuenta que, si bien algunas cadenas como Optimism tienen código de bytes implementado en una dirección predeterminada, lo que los convierte en "implementaciones anteriores", los tratamos como precompilados dentro del contexto de Foundry.
 
-### Registry
+
+### Registro
 
 | Chain ID      | Address                                      | Name                             |
 | ------------- | -------------------------------------------- | -------------------------------- |
@@ -51,9 +52,9 @@ Note that, while some chains like Optimism have bytecode deployed at a predeterm
 | ALL           | `0x7109709ECfa91a80626fF3989D68f67F5b1DD12D` | (Foundry) VM                     |
 | ALL           | `0x000000000000000000636F6e736F6c652e6c6f67` | (Foundry) Console                |
 
-### Reserved Ranges
+### Randos Reservados
 
-Some chains also include reserved ranges for precompile contracts.
+Algunas redes incluyen ciertos rangos los cuales reservan justamante para esto, para inlcuir estos contratos precompilados.
 
 | Chain ID      | Start                                        | Stop                                         |
 | ------------- | -------------------------------------------- | -------------------------------------------- |

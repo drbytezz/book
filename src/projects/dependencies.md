@@ -1,47 +1,47 @@
-## Dependencies
+## Dependencias
 
-Forge manages dependencies using [git submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules) by default, which means that it works with any GitHub repository that contains smart contracts.
+Forge gestiona las dependencias utilizando [submódulos de git](https://git-scm.com/book/en/v2/Git-Tools-Submodules) de forma predeterminada, lo que significa que funciona con cualquier repositorio de GitHub que contenga contratos inteligentes.
 
-### Adding a dependency
+### Agregando una dependencias
 
-To add a dependency, run [`forge install`](../reference/forge/forge-install.md):
+Para agregar una dependencia, ejecute el comando [`forge install`](../reference/forge/forge-install.md):
 
 ```sh
 {{#include ../output/deps/forge-install:all}}
 ```
 
-This pulls the `solmate` library, stages the `.gitmodules` file in git and makes a commit with the message "Installed solmate".
+Esto extrae la dependencia `solmate`, modifica el archivo` .gitmodules` en git y una vez culminada la instalación, realiza una confirmación con el mensaje(en inglés) "Solmate instalado" en la consola.
 
-If we now check the `lib` folder:
+Si ahora revisamos la carpeta `lib`:
 
 ```sh
 {{#include ../output/deps/tree:all}}
 ```
 
-We can see that Forge installed `solmate`!
+Podemos observar que Forge instaló `solmate` de forma correcta!
 
-By default, `forge install` installs the latest master branch version. If you want to install a specific tag or commit, you can do it like so:
+Por defecto, `forge install` instala la última versión de la rama maestra. Si el lector desea instalar una etiqueta o un "commit" específico, puede hacerlo así:
 
 ```sh
 $ forge install transmissions11/solmate@v7
 ```
 
-### Remapping dependencies
+### Reasignando dependencias
 
-Forge can remap dependencies to make them easier to import. Forge will automatically try to deduce some remappings for you:
+Forge es capaz de reasignar dependencias para hacer que utilizarlas sea mas sencillo y/o conveniente para el usuario. De forma automática, Forga va a deducir, o por lo menos, a intentar deducir algunas de estas reasignaciones sin que tengas que pedirlo:
 
 ```sh
 {{#include ../output/deps/forge-remappings:all}}
 ```
 
-These remappings mean:
+Estas reasignaciones significan:
 
-- To import from `forge-std` we would write: `import "forge-std/Contract.sol";`
-- To import from `ds-test` we would write: `import "ds-test/Contract.sol";`
-- To import from `solmate` we would write: `import "solmate/Contract.sol";`
-- To import from `weird-erc20` we would write: `import "weird-erc20/Contract.sol";`
+- Para importar `forge-std` debemos escribir: `import "forge-std/Contract.sol";`
+- Para importar `ds-test` debemos escribir: `import "ds-test/Contract.sol";`
+- Para importar `solmate` debemos escribir: `import "solmate/Contract.sol";`
+- Para importar `weird-erc20` debemos escribir: `import "weird-erc20/Contract.sol";`
 
-You can customize these remappings by creating a `remappings.txt` file in the root of your project.
+El lector puede modificar estos "remappings" creando un archivo `remappings.txt` en la base del proyecto.
 
 Let's create a remapping called `solmate-utils` that points to the `utils` folder in the solmate repository!
 
@@ -57,25 +57,25 @@ remappings = [
 ]
 ```
 
-Now we can import any of the contracts in `src/utils` of the solmate repository like so:
+Ahora podemos importar cualquiera de los contratos en `src/utils` del repositorio de solmate así:
 
 ```solidity
 import "solmate-utils/LibString.sol";
 ```
 
-### Updating dependencies
+### Actualización de dependencias
 
-You can update a specific dependency to the latest commit on the version you have specified using [`forge update <dep>`](../reference/forge/forge-update.md). For example, if we wanted to pull the latest commit from our previously installed master-version of `solmate`, we would run:
+También es posible actualizar una dependencia específica al último "commit" de la versión que haya especificado usando [`forge update <dep>`](../reference/forge/forge-update.md). Por ejemplo, si quisiéramos obtener el último "commit" de nuestra versión maestra previamente instalada de `solmate`, ejecutaríamos lo siguiente:
 
 ```sh
 $ forge update lib/solmate
 ```
 
-Alternatively, you can do this for all dependencies at once by just running `forge update`.
+De forma alternativa, el lector  puede hacer esto para todas las dependencias a la vez simplemente ejecutando `forge update`.
 
-### Removing dependencies
+### Eliminando dependencias
 
-You can remove dependencies using [`forge remove <deps>...`](../reference/forge/forge-remove.md), where `<deps>` is either the full path to the dependency or just the name. For example, to remove `solmate` both of these commands are equivalent:
+Es posible eliminar dependencias usando [`forge remove <deps>...`](../reference/forge/forge-remove.md), donde `<deps>` es la ruta completa a la dependencia o solo el nombre. . Por ejemplo, para eliminar `solmate`, ambos comandos son equivalentes:
 
 ```ignore
 $ forge remove solmate
@@ -83,8 +83,8 @@ $ forge remove solmate
 $ forge remove lib/solmate
 ```
 
-### Hardhat compatibility
+### Compatibilidad con Hardhat
 
-Forge also supports Hardhat-style projects where dependencies are npm packages (stored in `node_modules`) and contracts are stored in `contracts` as opposed to `src`.
+Forge también admite proyectos estilo Hardhat donde las dependencias son paquetes npm (almacenados en `node_modules`) y los contratos se almacenan en` development` en lugar de `src`.
 
-To enable Hardhat compatibility mode pass the `--hh` flag.
+Para habilitar el modo de compatibilidad con Hardhat, pase el indicador `--hh`.

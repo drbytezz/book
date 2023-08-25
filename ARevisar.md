@@ -12,7 +12,13 @@ Los largos, como por ejemplo, los cheatcodes van despues
 - chisel[ok]
 - getting-started[ok]
 - config [ok]
+- misc [ok]
+- projects [ok]
+- tutoriales []
+- FAQ       []
+- cheatcodes  []
 - forge []
+- reference []
 
 
 # Palabras con tildes
@@ -32,3 +38,4 @@ documentación
 integración
 configuración
 código
+función
