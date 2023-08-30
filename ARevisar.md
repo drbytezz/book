@@ -28,6 +28,7 @@ específico
 más
 estén
 podría
+debería
 ahí
 aquí
 También
@@ -39,3 +40,4 @@ integración
 configuración
 código
 función
+pequeños

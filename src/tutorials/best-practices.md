@@ -1,44 +1,45 @@
-# Best Practices
+# Buenas Prácticas 
 
-This guide documents the suggested best practices when developing with Foundry.
-In general, it's recommended to handle as much as possible with [`forge fmt`](../reference/config/formatter.md), and anything this doesn't handle is below.
+El siguiente documento sugiere algunos patrones que son considerados por la comunidad como buenas prácticas al momnto de desarrollar un proyecto con Foundry.
+Por lo general, se recomienda manejarse con [`forge fmt`](../reference/config/formatter.md), siendo esta la herramienta para formatear el código que viene incluida. COmo toda herramienta, esta presenta ciertas limitaciones, las cuales se comentan aquí debajo.
 
-- [General Contract Guidance](#general-contract-guidance)
+- [Guía General para montar Contratos](#guía-general-para-montar-contratos)
 - [Tests](#tests)
-  - [General Test Guidance](#general-test-guidance)
+  - [Guía General para montar Tests](#guía-general-para-montar-tests)
   - [Fork Tests](#fork-tests)
-  - [Test Harnesses](#test-harnesses)
-    - [Internal Functions](#internal-functions)
-    - [Private Functions](#private-functions)
-    - [Workaround Functions](#workaround-functions)
-  - [Best practices](#best-practices)
-  - [Taint Analysis](#taint-analysis)
+  - [Arneses de prueba](#arneses-de-prueba)
+    - [Funciones Internas](#funciones-internas)
+    - [Funciones Privadas](#funciones-privadas)
+    - [Alternativas a Fucniones](#alternativas-a-funciones)
+  - [Buenas Prácticas](#buenas-prácticas)
+  - [Análisis de contaminación](#análisis-de-contaminación)
 - [Scripts](#scripts)
-- [Comments](#comments)
-- [Resources](#resources)
+- [Comentarios](#comentarios)
+- [Recursos](#recursos)
 
-## General Contract Guidance
+## Guía General para montar Contratos
 
-1. Always use named import syntax, don't import full files. This restricts what is being imported to just the named items, not everything in the file. Importing full files can result in solc complaining about duplicate definitions and slither erroring, especially as repos grow and have more dependencies with overlapping names.
+1. Es muy recomendable que al momento de importar un archivo, no se importe el archivo completo per se, sino que se importen los componentes que son necesarios. A esto lo denominamos la importación por nombre. Esto restringe lo que se importa solo a los elementos nombrados, no a todo el contenido del archivo. La importación de archivos completos puede hacer que solc se queje de definiciones duplicadas y errores de deslizamiento, especialmente a medida que los repositorios crecen y tienen más dependencias con nombres superpuestos.
 
-   - Good: `import {MyContract} from "src/MyContract.sol"` to only import `MyContract`.
-   - Bad: `import "src/MyContract.sol"` imports everything in `MyContract.sol`. (Importing `forge-std/Test` or `Script` can be an exception here, so you get the console library, etc).
+   - Correcto: `import {MyContract} from "src/MyContract.sol"` se restringe a importar `MyContract`.
+   - Incorrecto: `import "src/MyContract.sol"` importa la totalidad`MyContract.sol`. (Importar `forge-std/Test` o `Script` se pueden excluir de esta lista, de esta foma obtenes la libreria de `console.log` entre otras inlcuidas).
 
-1. Sort imports by `forge-std/` first, then dependencies, `test/`, `script/`, and finally `src/`. Within each, sort alphabetically by path (not by the explicit named items being imported). _(Note: This may be removed once [foundry-rs/foundry#3396](https://github.com/foundry-rs/foundry/issues/3396) is merged)._
+1. Mantenga un orden al importar. Importe primero por `forge-std/`, luego por dependencias, `test/`, `script/` y finalmente por `src/`. Dentro de cada uno, ordene alfabéticamente por ruta (no por los elementos con nombres explícitos que se importan). _(Nota: esto se puede eliminar una vez que [foundry-rs/foundry#3396](https://github.com/foundry-rs/foundry/issues/3396) se fusione)._
 
-1. Similarly, sort named imports. _(Note: This may be removed once [foundry-rs/foundry#3396](https://github.com/foundry-rs/foundry/issues/3396) is resolved)._
+1. De forma análoga, ordene los imports por nombre. _(Nota: esto se puede eliminar una vez que se resuelva [foundry-rs/foundry#3396](https://github.com/foundry-rs/foundry/issues/3396))._
 
-   - Good: `import {bar, foo} from "src/MyContract.sol"`
-   - Bad: `import {foo, bar} from "src/MyContract.sol"`
+   - Correcto: `import {bar, foo} from "src/MyContract.sol"`
+   - Incorrecto: `import {foo, bar} from "src/MyContract.sol"`
 
-1. Note the tradeoffs between absolute and relative paths for imports (where absolute paths are relative to the repo root, e.g. `"src/interfaces/IERC20.sol"`), and choose the best approach for your project:
 
-   - Absolute paths make it easier to see where files are from and reduce churn when moving files around.
-   - Relative paths make it more likely your editor can provide features like linting and autocomplete, since editors/extensions may not understand your remappings.
+1. Tenga en cuenta las diferencias entre importar un archivo con rutas absolutas y con rutas relativas (donde las rutas absolutas son relativas a la raíz de la carpeta, por ejemplo, `"src/interfaces/IERC20.sol"`), y elija el mejor enfoque para su proyecto::
 
-1. If copying a library from a dependency (instead of importing it), use the `ignore = []` option in the config file to avoid formatting that file. This makes diffing it against the original simpler for reviewers and auditors.
+   - Las rutas absolutas facilitan ver de dónde provienen los archivos y reducen la rotación al mover archivos.
+   - Las rutas relativas hacen que sea más probable que su editor pueda proporcionar funciones como linting y autocompletar, ya que es posible que los editores/extensiones no comprendan sus reasignaciones.
 
-1. Similarly, feel free to use the `// forgefmt: disable-*` comment directives to ignore lines/sections of code that look better with manual formatting. Supported values for `*` are:
+1. Si el lector decide copiar una libreria de una dependencia (en lugar de importarla), use la opción `ignore = []` en el archivo de configuración para evitar formatear ese archivo. Esto hace que compararlo con el original sea más sencillo para los revisores y auditores.
+
+1. De forma similar, sientase libre de utilizar los comentarios `// forgefmt: disable-*` para que al momento de formatear el archivo, dichas lineas/secciones sean ignoradas; ya sea porque el lector prefiere como se ven o considera que un formateo manual es más apropiado. Los valores para los que Foundry ofrece soporte (`*`) son los siguientes:
 
    - `disable-line`
    - `disable-next-line`
@@ -46,97 +47,95 @@ In general, it's recommended to handle as much as possible with [`forge fmt`](..
    - `disable-start`
    - `disable-end`
 
-Additional best practices from [samsczun](https://twitter.com/samczsun)'s [How Do You Even Write Secure Code Anyways](https://www.youtube.com/watch?v=Wm3t8Fuiy1E) talk:
+Otro recurso que, si el lector está interesado en buenas prácticas, puede revisar las redes de [samsczun](https://twitter.com/samczsun) o este excelente video suyo donde trata el tema. Se titula [How Do You Even Write Secure Code Anyways](https://www.youtube.com/watch?v=Wm3t8Fuiy1E) :
 
-- Use descriptive variable names.
-- Limit the number of active variables.
-- No redundant logic.
-- Early exit as much as possible to reduce mental load when seeing the code.
-- Related code should be placed near each other.
-- Delete unused code.
+- EL nombre de sus variables debe ser descriptivo.
+- Limitar el número de variables activas.
+- Evitar que haya lógica redundante.
+- Salida anticipada tanto como sea posible para reducir la carga mental al ver el código.
+- Las funciones que estén relacionadas deben posicionarse cerca.
+- Evitar el código que no se utiliza.
 
 ## Tests
 
-### General Test Guidance
+### Guía General para montar Tests
 
-1. For testing `MyContract.sol`, the test file should be `MyContract.t.sol`. For testing `MyScript.s.sol`, the test file should be `MyScript.t.sol`.
+1. Para realizarle test a `MyContract.sol`,el nombre del archivo debería ser `MyContract.t.sol`. Para realizarle test a `MyScript.s.sol`, el nombre del archivo debería ser `MyScript.t.sol`.
 
-   - If the contract is big and you want to split it over multiple files, group them logically like `MyContract.owner.t.sol`, `MyContract.deposits.t.sol`, etc.
+   - En caso de que su archivo sea muy grande, y el lector desee fragmentarlo por comodidad, esto se puede lograr con una agrupacion lógica, la cual nombre el contrato, seguido de la sección que se deaea observar terminando con el prefijo de `.t.sol`. Ejemplo de esto puede ser lo siguiente: `MyContract.owner.t.sol`, `MyContract.deposits.t.sol`, etc.
 
-1. Never make assertions in the `setUp` function, instead use a dedicated test like `test_SetUpState()` if you need to ensure your `setUp` function does what you expected. More info on why in [foundry-rs/foundry#1291](https://github.com/foundry-rs/foundry/issues/1291)
+1. No se recomienda el uso de condicionales dentro de la funcion `setUp`, en vez de ponerlas ahí, se recomienda incluirlas dentro de una función que estén dedicada a aquella condicio, un ejemplo  de esto es `test_SetUpState()`. Si lector desea explorar el funcionamiento de la función `setUp`, dirijase al siguiente "issue" de github : [foundry-rs/foundry#1291](https://github.com/foundry-rs/foundry/issues/1291)
 
-1. For unit tests, there are two major ways to organize the tests:
+1. Por el momento, son 2 las formas principales de realizar test por unidades, se describen a continuacion:
 
-   1. Treat contracts as describe blocks:
+   1. Se trata los contratos como bloques descriptivos. Esto implica que el lector, al momento de realizar sus tests, generara nuevos contratos los cuales conendran los tests especificos de cada bloque : 
+      - `contract Add` contiene los test para el metodo `add` del contrato `MyContract`.
+      - `contract Supply` contiene los test para el metodo `supply`.
+      - `contract Constructor` contiene los test para el metodo "constructor".
+      - Este acercamiento puede resultar beneficioso al momento de realizar tests mediante contratos pequeños y especificos debido a que estos compilan a mayor velocidad que archivos más pesados. Es realmente util al momento de manejar un "suite" de tests muy grande, los tiempos de compilacion deberian verse reducidos significativamente.
+   2. Para este acercamiento, el lector genera un solo contrato el cual engloba todos los test del contrato "target", esto implica realizar pruebas para tantas funciones y escenarios se presenten en dicho contrato:
+      - `contract MyContractTest` contiene todos los test para`MyContract`.
+      - `function test_add_AddsTwoNumbers()` la encontramos en  `MyContractTest`, lo que resuelve los tests de la funcion `add`.
+      - `function test_supply_UsersCanSupplyTokens()` también la encontramos en `MyContractTest`,lo que resuelve los tests de la funcion `supply`.
+      - Este acercamiento no solo le permite al lector agrupar todos los escenarios, lo que le permite comprender más a fondo lo sucedido en dicho contrato; sino que tambien permite identificar fallas no tan evidentes del diseño del contrato/protocolo.
 
-      - `contract Add` holds all unit tests for the `add` method of `MyContract`.
-      - `contract Supply` holds all tests for the `supply` method.
-      - `contract Constructor` hold all tests for the constructor.
-      - A benefit of this approach is that smaller contracts should compile faster than large ones, so this approach of many small contracts should save time as test suites get large.
+1. Lineamientos generales para realizar todos los tests:
 
-   2. Have a Test contract per contract-under-test, with as many utilities and fixtures as you want:
-      - `contract MyContractTest` holds all unit tests for `MyContract`.
-      - `function test_add_AddsTwoNumbers()` lives within `MyContractTest` to test the `add` method.
-      - `function test_supply_UsersCanSupplyTokens()` also lives within `MyContractTest` to test the `supply` method.
-      - A benefit of this approach is that test output is grouped by contract-under-test, which makes it easier to quickly see where failures are.
+   - Los test/contratos deberían escribirse en el mismo orden que aparecen en el contratoq ue esta siendo testeado.
+   - Todo `unit tests` que realize pruebas sobre una funcion particular deberían estar agrupadas de forma serial en un mismo archivo.
+   - Los contratos encargados de realizar los test pueden tener heredar funciones y/o estados de cualquier contrato `helper`. Un ejemplo de esto puede ser el siguiente: el `contract MyContractTest` es donde, segun hemos descrito, deben estar los test del contrato `MyContract`, ahora bien, ese contrato puede tener la dependencia  `Test` incluida en la suite de forge-std. Como tambien puede ser el caso de que tu construyas un suite personalizado llamado `TestUtilities` y desees utilizarlo en tus test futuros.
 
-1. Some general guidance for all tests:
+1. Las pruebas de integración deben ubicarse en el mismo directorio `test`, con una convención de nombres clara. Estas pruebas pueden estar en archivos dedicados, o pueden convivir junto a las pruebas unitarias relacionadas en archivos de prueba existentes.
 
-   - Test contracts/functions should be written in the same order as the original functions in the contract-under-test.
-   - All unit tests that test the same function should live serially in the test file.
-   - Test contracts can inherit from any helper contracts you want. For example `contract MyContractTest` tests `MyContract`, but may inherit from forge-std's `Test`, as well as e.g. your own `TestUtilities` helper contract.
+1. Se recomienda mantener la consistencia en la nomenclatura de las pruebas, ya que es útil para filtrar pruebas (por ejemplo, para informes de gas, es posible que desees filtrar las pruebas que revierten). Cuando combines convenciones de nombres, mantenlas en orden alfabético. A continuación, se muestra un ejemplo de nombres válidos. Podes encontrar una lista completa de ejemplos válidos e inválidos en el siguiente [documento](https://github.com/ScopeLift/scopelint/blob/1857e3940bfe92ac5a136827374f4b27ff083971/src/check/validators/test_names.rs#L106-L143).
 
-1. Integration tests should live in the same `test` directory, with a clear naming convention. These may be in dedicated files, or they may live next to related unit tests in existing test files.
+   - `test_Description` para test normales .
+   - `testFuzz_Description` para test de fuzz.
+   - `test_Revert[If|When]_Condition` para test que esperas reviertan.
+   - `testFork_Description`  para test que interactuen con un "fork" de alguna red.
+   - `testForkFuzz_Revert[If|When]_Condition` para test que combinan todos los anteriores, un tes que hace "fuzz" en un "fork" y, como si fuera poco, se espera que este test revierta.
 
-1. Be consistent with test naming, as it's helpful for filtering tests (e.g. for gas reports you might want to filter out revert tests). When combining naming conventions, keep them alphabetical. Below is a sample of valid names. A comprehensive list of valid and invalid examples can be found [here](https://github.com/ScopeLift/scopelint/blob/1857e3940bfe92ac5a136827374f4b27ff083971/src/check/validators/test_names.rs#L106-L143).
+1. Es muy recomendable nombrar las variables que sean constantes y/o inmutables usando `TODO_MAYUS_USANDO_GUION_BAJO`, esto hace que distingurlas de funciones sea mucho mas sencillo.
 
-   - `test_Description` for standard tests.
-   - `testFuzz_Description` for fuzz tests.
-   - `test_Revert[If|When]_Condition` for tests expecting a revert.
-   - `testFork_Description` for tests that fork from a network.
-   - `testForkFuzz_Revert[If|When]_Condition` for a fuzz test that forks and expects a revert.
+1. Cuando queremos probar asersiones, como puede ser el caso de  `assertEq`, el lector debe considerar el ultimo parametro para identificar de forma eficaz y sencilla los posibles fallos. No tiene necesidad de ser extremadamente detallado, se pueden mantener breves y consisos o inclusive pueden ser un numero&mdash; basicamente sirven para reemplazar numeros planos al momento de reertir la accion, por ejemplo `assertEq(x, y, "1")` o `assertEq(x, y, "sum1")`. _(Note: [foundry-rs/foundry#2328](https://github.com/foundry-rs/foundry/issues/2328) tracks integrating this natively)._
 
-1. Name your constants and immutables using `ALL_CAPS_WITH_UNDERSCORES`, to make it easier to distinguish them from variables and functions.
+1. Cuando el lector desee realizar test para eventos, es preferible setear todos los parametros de `expectEmit` como `true`,por ejemplo. `vm.expectEmit(true, true, true, true)` o `vm.expectEmit()`. Beneficios:
 
-1. When using assertions like `assertEq`, consider leveraging the last string param to make it easier to identify failures. These can be kept brief, or even just be numbers&mdash;they basically serve as a replacement for showing line numbers of the revert, e.g. `assertEq(x, y, "1")` or `assertEq(x, y, "sum1")`. _(Note: [foundry-rs/foundry#2328](https://github.com/foundry-rs/foundry/issues/2328) tracks integrating this natively)._
+   - Esto asegura que pruebes todo en tu evento.
+   - Si agregas un parametro (es decir, un nuevo parámetro indexado), ahora se prueba automáticamente.
+   - Incluso si solo tienes 1 parametro, los argumentos adicionales true no afectan la prueba.
 
-1. When testing events, prefer setting all `expectEmit` arguments to `true`, i.e. `vm.expectEmit(true, true, true, true)` or `vm.expectEmit()`. Benefits:
+1. ¡No te olvides de escribir pruebas de invariantes! Para la aserción, usá una descripción en inglés detallada del invariante: `assertEq(x + y, z, "Se rompió el invariante: la suma de x e y siempre debe ser igual a z")`. Para obtener más información sobre esto, dale una mirada al tutorial de [Pruebas de Invariantes](../forge/invariant-testing).
+.
+### Pruebas de Fork 
 
-   - This ensures you test everything in your event.
-   - If you add a topic (i.e. a new indexed parameter), it's now tested by default.
-   - Even if you only have 1 topic, the extra `true` arguments don't hurt.
+1. No te sientas obligado a tratar las pruebas de forks de manera especial, y úsalas sin restricciones:
 
-1. Remember to write invariant tests! For the assertion string, use a verbose english description of the invariant: `assertEq(x + y, z, "Invariant violated: the sum of x and y must always equal z")`. For more info on this, check out the [Invariant Testing](../forge/invariant-testing) tutorial.
+   - Los mocks son _necesarios_ en el desarrollo web2 de código cerrado; debes simular respuestas de API porque el código de esa API no es de código abierto, por lo que no puedes simplemente ejecutarlo localmente. Pero en el caso de las blockchains eso no es cierto: cualquier código con el que estás interactuando y que ya está desplegado puede ejecutarse localmente e incluso modificarse de forma gratuita. Entonces, ¿por qué introducir el riesgo de un mock incorrecto si no es necesario?
+   - Una razón común para evitar las pruebas de forks y preferir los mocks es que las pruebas de forks son lentas. Pero esto no siempre es cierto. Al fijar un número de bloque, Forge almacena en caché las respuestas de RPC, por lo que solo la primera ejecución es más lenta y las ejecuciones posteriores son considerablemente más rápidas. Revisate [estos benchmark](https://github.com/mds1/convex-shutdown-simulation/), donde a Forge le llevó 7 minutos para la primera ejecución con un RPC remoto, pero solo medio segundo una vez que los datos se almacenaron en caché. [Alchemy](https://alchemy.com), [Infura](https://infura.io) y [Tenderly](https://tenderly.co) ofrecen datos de archivo de forma gratuita, por lo que fijar a un bloque no debería ser problemático.
+   - Deberas notar que [herramientas compatibles con foundry](https://github.com/foundry-rs/foundry-toolchain) como GitHub Action guardan los caches de las respuestas de RPC en CI de forma predeterminada, y también actualizará la caché cuando actualices tus pruebas de forks.
 
-### Fork Tests
+1. Ten cuidado con las pruebas de fuzzing en un fork para evitar consumir tus solicitudes RPC con pruebas de fuzzing no deterministas. Si la entrada de tu prueba de fuzzing en el fork es algún parámetro que se utiliza en una llamada RPC para obtener datos (por ejemplo, consultar el balance del token de una dirección), cada ejecución de una prueba de fuzzing utiliza al menos 1 solicitud RPC, por lo que rápidamente podrías alcanzar los límites de tasa o límites de uso. Soluciones a considerar:
 
-1. Don't feel like you need to give forks tests special treatment, and use them liberally:
+   - Reemplaza múltiples llamadas RPC con una sola [multicall](https://github.com/mds1/multicall).
+   - Crea [semilla](/src/reference/config/testing.md#seed) especifica para  test fuzz/invariantes : esto asegura que cada ejecución de `forge test` use los mismos datos de entrada para el fuzzing. Los resultados de las RPC se almacenan en caché localmente, por lo que solo consultarás el nodo la primera vez.
+   - Estructura tus pruebas de manera que los datos sobre los que estás aplicando el fuzzing sean calculados localmente por tu contrato, en lugar de datos que se utilicen en una llamada RPC (esto puede o no ser factible según lo que estés haciendo).
+   - Por último, siempre puedes ejecutar un nodo local o mejorar tu plan de RPC.
 
-   - Mocks are _required_ in closed-source web2 development—you have to mock API responses because the code for that API isn't open source so you cannot just run it locally. But for blockchains that's not true: any code you're interacting with that's already deployed can be locally executed and even modified for free. So why introduce the risk of a wrong mock if you don't need to?
-   - A common reason to avoid fork tests and prefer mocks is that fork tests are slow. But this is not always true. By pinning to a block number, forge caches RPC responses so only the first run is slower, and subsequent runs are significantly faster. See [this benchmark](https://github.com/mds1/convex-shutdown-simulation/), where it took forge 7 minutes for the first run with a remote RPC, but only half a second once data was cached. [Alchemy](https://alchemy.com), [Infura](https://infura.io) and [Tenderly](https://tenderly.co) offer free archive data, so pinning to a block shouldn't be problematic.
-   - Note that the [foundry-toolchain](https://github.com/foundry-rs/foundry-toolchain) GitHub Action will cache RPC responses in CI by default, and it will also update the cache when you update your fork tests.
+1. Al escribir pruebas de forks, no utilices el identificador `--fork-url`. En su lugar, se recomienda  el siguiente enfoque por ser más flexible:
 
-1. Be careful with fuzz tests on a fork to avoid burning through RPC requests with non-deterministic fuzzing. If the input to your fork fuzz test is some parameter which is used in an RPC call to fetch data (e.g. querying the token balance of an address), each run of a fuzz test uses at least 1 RPC request, so you'll quickly hit rate limits or usage limits. Solutions to consider:
+   - Define [rpc_endpoints] en el archivo de configuración foundry.toml y utiliza los [cheatcodes de forking](../forge/fork-testing.md#forking-cheatcodes).
+   - Accede al endpoint de la URL RPC en tu prueba utilizando `stdChains.ChainName.rpcUrl` de `forge-std`. Consulta la lista de cadenas compatibles y los alias esperados en el archivo de configuración. [aquí](https://github.com/foundry-rs/forge-std/blob/ff4bf7db008d096ea5a657f2c20516182252a3ed/src/StdCheats.sol#L255-L271).
+   - Siempre fija a un bloque para que las pruebas sean determinísticas y las respuestas de RPC se almacenen en caché.
+   - Puedes encontrar más información sobre este enfoque de pruebas de forks [aquí](https://twitter.com/msolomon44/status/1564742781129502722) (esto es anterior a StdChains, por lo que ese aspecto está un poco desactualizado).
 
-   - Replace multiple RPC calls with a single [multicall](https://github.com/mds1/multicall).
-   - Specify a fuzz/invariant [seed](/src/reference/config/testing.md#seed): this makes sure each `forge test` invocation uses the same fuzz inputs. RPC results are cached locally, so you'll only query the node the first time.
-   - Structure your tests so the data you are fuzzing over is computed locally by your contract, and not data that is used in an RPC call (may or may not be feasible based on what you're doing).
-   - Lastly, you can of course always run a local node or bump your RPC plan.
+### Arnes para Tests 
 
-1. When writing fork tests, do not use the `--fork-url` flag. Instead, prefer the following approach for its improved flexibility:
+#### Funciones Internas  
 
-   - Define `[rpc_endpoints]` in the `foundry.toml` config file and use the [forking cheatcodes](../forge/fork-testing.md#forking-cheatcodes).
-   - Access the RPC URL endpoint in your test with forge-std's `stdChains.ChainName.rpcUrl`. See the list of supported chains and expected config file aliases [here](https://github.com/foundry-rs/forge-std/blob/ff4bf7db008d096ea5a657f2c20516182252a3ed/src/StdCheats.sol#L255-L271).
-   - Always pin to a block so tests are deterministic and RPC responses are cached.
-   - More info on this fork test approach can be found [here](https://twitter.com/msolomon44/status/1564742781129502722) (this predates `StdChains` so that aspect is a bit out of date).
+Para probar funciones `internal`, escribe un contrato de soporte que herede del contrato bajo prueba (CuT). Los contratos de soporte que heredan del CuT exponen las funciones `internal` como funciones `external`.
 
-### Test Harnesses
-
-#### Internal Functions
-
-To test `internal` functions, write a harness contract that inherits from the contract under test (CuT). Harness contracts that inherit from the CuT expose the `internal` functions as `external` ones.
-
-Each `internal` function that is tested should be exposed via an external one with a name that follows the pattern `exposed_<function_name>`. For example:
+Cada función `internal` a la cual le realizamos pruebas mediante una función `external` debe seguir el siguiente `exposed_<function_name>`. Por ejemplo:
 
 ```solidity
 // file: src/MyContract.sol
@@ -157,46 +156,46 @@ contract MyContractHarness is MyContract {
 }
 ```
 
-#### Private Functions
+#### Funciones Privadas  
 
-Unfortunately there is currently no good way to unit test `private` methods since they cannot be accessed by any other contracts. Options include:
+Lamentablemente, aun no hay una manera correcta de realizar pruebas unitarias a métodos `private`, ya que no pueden ser accedidos por otros contratos. Las opciones incluyen:
 
-- Converting `private` functions to `internal`.
-- Copy/pasting the logic into your test contract and writing a script that runs in CI check to ensure both functions are identical.
+- Convertir funciones  `private` a `internal`.
+- Copiar y pegar la lógica en tu contrato de prueba y escribir un script que se ejecute en CI para asegurarse de que ambas funciones sean idénticas.
 
-#### Workaround Functions
+#### Funciones Perifericas
 
-Harnesses can also be used to expose functionality or information otherwise unavailable in the original smart contract. The most straightforward example is when we want to test the length of a public array. The functions should follow the pattern: `workaround_<function_name>`, such as `workaround_queueLength()`.
+Las envolturas (harnesses) también se pueden utilizar para exponer funcionalidades o información que de otra manera no estarían disponibles en el contrato inteligente original. El ejemplo más directo es cuando queremos probar la longitud de un _array_ público. Las funciones deben seguir el patrón: `workaround_<function_name>`, como `workaround_queueLength()`.
 
-Another use case for this is tracking data that you would not track in production to help test invariants. For example, you might store a list of all token holders to simplify validation of the invariant "sum of all balances must equal total supply". These are often known as "ghost variables". You can learn more about this in [Rikard Hjort](https://twitter.com/rikardhjort)'s [Formal Methods for the Working DeFi Dev](https://youtu.be/ETlNhV9jYJw) talk.
+Otro caso de uso para esto es hacer un seguimiento de datos que no seguirías en producción para ayudar a probar invariantes. Por ejemplo, podrías almacenar una lista de todos los titulares de tokens para simplificar la validación del invariante "la suma de todos los balances debe ser igual al suministro total". A menudo se conocen como "variables fantasma". Puedes obtener más información sobre esto en la charla de  [Rikard Hjort](https://twitter.com/rikardhjort) sobre [Métodos Formales para el Desarrollador DeFi en Acción](https://youtu.be/ETlNhV9jYJw)(EN).
 
-### Best practices
+### Buenas practicas
 
-Thanks to [@samsczun](https://twitter.com/samczsun)'s [How Do You Even Write Secure Code Anyways](https://www.youtube.com/watch?v=Wm3t8Fuiy1E) talk for the tips in this section and the following section.
+Gracias a la charla de [@samsczun](https://twitter.com/samczsun) sobre [¿Cómo se Escribe Código Seguro en Primer Lugar?](https://www.youtube.com/watch?v=Wm3t8Fuiy1E)(EN) es que recopilamos lso consejos y anotaciones presentes tanto  en esta como en la proxima seccion.
 
-- Don't optimize for coverage, optimize for well thought-out tests.
-- Write positive and negative unit tests.
-  - Write _positive_ unit tests for things that the code should handle. Validate _all_ state that changes from these tests.
-  - Write _negative_ unit tests for things that the code should _not_ handle. It's helpful to follow up (as an adjacent test) with the positive test and make the change that it needs to pass.
-  - Each code path should have its own unit test.
-- Write integration tests to test entire features.
-- Write fork tests to verify the correct behavior with existing deployed contract.
+- No optimices para la cobertura, optimiza para pruebas bien pensadas.
+- Escribe pruebas unitarias positivas y negativas.
+   - Escribe pruebas unitarias _positivas_ para las cosas que el código debería manejar. Valida _todo_ el estado que cambia a partir de estas pruebas.
+   - Escribe pruebas unitarias _negativas_ para las cosas que el código _no debería_ manejar. Es útil seguir con una prueba positiva (como una prueba adyacente) y realizar el cambio necesario para que pase.
+   - Cada camino del código debería tener su propia prueba unitaria.
+- Escribe pruebas de integración para probar características completas.
+- Escribe pruebas de forks para verificar el comportamiento correcto con contratos ya desplegados existentes.
 
-### Taint Analysis
+### Análisis de Contaminación
 
-When testing, you should prioritize functions that an attacker can affect, that means functions that accept some kind of user input. These are called _sources_.
+Al hacer pruebas, debes priorizar las funciones que un atacante puede afectar, es decir, las funciones que aceptan algún tipo de entrada del usuario. Estas se llaman _fuentes_.
 
-Consider that input data as _tainted_ until it has been checked by the code, at which point it's considered _clean_.
+Considera que los datos de entrada están _contaminados_ hasta que sean verificados por el código, momento en el que se consideran _limpios_.
 
-A _sink_ is a part of the code where some important operation is happening. For example, in MakerDAO that would be `vat.sol`.
+Un _sink_ es una parte del código donde ocurre alguna operación importante. Por ejemplo, en MakerDAO eso podría ser `vat.sol`.
 
-You should _ensure_ that no _tainted_ data ever reaches a _sink_. That means that all data that find themselves in the sink, should, at some point, have been checked by you. So, you need to define what the data _should_ be and then make sure your checks _ensure_ that the data will be how you expect it to be.
+Debes _asegurarte_ de que nunca lleguen datos _contaminados_ a un _sink_. Esto significa que todos los datos que llegan al _sink_ deberían haber sido verificados por ti en algún momento. Por lo tanto, necesitas definir cómo deberían ser los datos y luego asegurarte de que tus verificaciones _garanticen_ que los datos sean como esperas que sean.
 
 ## Scripts
 
-1. Stick with `run` as the default function name for clarity.
+1. Mantené `run` como la función predeterminado para mayor claridad.
 
-1. Any methods that are not intended to be called directly in the script should be `internal` or `private`. Generally the only public method should be `run`, as it's easier to read/understand when each script file just does one thing.
+1. . Cualquier método que no esté destinado a ser llamado directamente en el script debe ser `internal` o `private`. En general, el único método público debería ser `run`, ya que es más fácil de leer y entender cuando cada archivo de script hace una sola cosa.
 
 1. Consider prefixing scripts with a number based on the order they're intended to be run over the protocol's lifecycle. For example, `01_Deploy.s.sol`, `02_TransferOwnership.s.sol`. This makes things more self-documenting. This may not always apply depending on your project.
 
@@ -259,8 +258,8 @@ function readInput(string memory input) internal returns (string memory) {
 
 1. Any markdown in your comments will carry over properly when generating docs with `forge doc`, so structure comments with markdown when useful.
 
-   - Good: `` /// @notice Returns the sum of `x` and `y`. ``
-   - Bad: `/// @notice Returns the sum of x and y.`
+   - Correcto: `` /// @notice Returns the sum of `x` and `y`. ``
+   - Incorrecto: `/// @notice Returns the sum of x and y.`
 
 ## Resources
 
@@ -272,7 +271,7 @@ Write more secure code and better tests:
 Foundry in Action:
 
 - [awesome-foundry](https://github.com/crisgarner/awesome-foundry): A curated list of awesome of the Foundry development framework.
-- [Nomad Monorepo](https://github.com/nomad-xyz/monorepo): All the `contracts-*` packages. Good example of using many Foundry features including fuzzing, `ffi` and various cheatcodes.
-- [Sablier V2 Core](https://github.com/sablier-labs/v2-core): Another good example of many Foundry features. Also a pioneer of the state tree testing approach, see the `*.tree` files.
-- [Uniswap Periphery](https://github.com/gakonst/v3-periphery-foundry): Good example of using inheritance to isolate test fixtures.
+- [Nomad Monorepo](https://github.com/nomad-xyz/monorepo): All the `contracts-*` packages. Correcto  example of using many Foundry features including fuzzing, `ffi` and various cheatcodes.
+- [Sablier V2 Core](https://github.com/sablier-labs/v2-core): Another Correcto  example of many Foundry features. Also a pioneer of the state tree testing approach, see the `*.tree` files.
+- [Uniswap Periphery](https://github.com/gakonst/v3-periphery-foundry): Correct example of using inheritance to isolate test fixtures.
 - [PRBMath](https://github.com/PaulRBerg/prb-math): A library for fixed-point arithmetic in Solidity, with many parameterized tests that harness Foundry.
