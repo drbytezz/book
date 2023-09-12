@@ -197,17 +197,17 @@ Debes _asegurarte_ de que nunca lleguen datos _contaminados_ a un _sink_. Esto s
 
 1. . Cualquier método que no esté destinado a ser llamado directamente en el script debe ser `internal` o `private`. En general, el único método público debería ser `run`, ya que es más fácil de leer y entender cuando cada archivo de script hace una sola cosa.
 
-1. Consider prefixing scripts with a number based on the order they're intended to be run over the protocol's lifecycle. For example, `01_Deploy.s.sol`, `02_TransferOwnership.s.sol`. This makes things more self-documenting. This may not always apply depending on your project.
+1. Considere anteponer a los scripts un número según el orden en el que deben ejecutarse durante el ciclo de vida del protocolo. Por ejemplo, `01_Deploy.s.sol`, `02_TransferOwnership.s.sol`. Esto hace que las cosas se vean  con mayor claridad . Es posible que esto no siempre se aplique dependiendo de su proyecto.
 
-1. Test your scripts.
+1. Pruebe sus _scripts_.
 
-   - Unit test them like you would test normal contracts, by writing tests that assert on the state changes made from running the script.
-   - Write your deploy script and scaffold tests by running that script. Then, run all tests against the state resulting from your production deployment script. This is a great way to gain confidence in a deploy script.
-   - Within your script itself, use `require` statements (or the `if (condition) revert()` pattern if you prefer) to stop execution of your script if something is wrong. For example, `require(computedAddress == deployedAddress, "address mismatch")`. Using the `assertEq` helpers instead will not stop execution.
+   - Pruébelos unitariamente como lo haría con contratos normales, escribiendo pruebas que afirmen los cambios de estado realizados al ejecutar el script.
+   - Escriba su secuencia de comandos de implementación y pruebas de andamiaje ejecutando esa secuencia de comandos. Luego, ejecute todas las pruebas con el estado resultante de su secuencia de comandos de implementación de producción. Esta es una excelente manera de ganar confianza en un script de implementación.
+   - Dentro de su script, use `require` declaraciones (o el  `if (condition) revert()` patrón si lo prefiere) para detener la ejecución de su script si algo anda mal. Por ejemplo,  `require(computedAddress == deployedAddress, "address mismatch")`. En su lugar , utilizar los `assertEq`  no detendrá la ejecución.
 
-1. **Carefully audit which transactions are broadcast**. Transactions not broadcast are still executed in the context of a test, so missing broadcasts or extra broadcasts are easy sources of error in the previous step.
+1. **Audite cuidadosamente qué transacciones se transmiten**. Las transacciones que no se transmiten aún se ejecutan en el contexto de una prueba, por lo que las transmisiones faltantes o las transmisiones adicionales son fuentes fáciles de error en el paso anterior.
 
-1. **Watch out for frontrunning**. Forge simulates your script, generates transaction data from the simulation results, then broadcasts the transactions. Make sure your script is robust against chain-state changing between the simulation and broadcast. A sample script vulnerable to this is below:
+1. **Cuidado con los que van al frente**. Forge simula su script, genera datos de transacciones a partir de los resultados de la simulación y luego transmite las transacciones. Asegúrese de que su secuencia de comandos sea sólida contra los cambios de estado de la cadena entre la simulación y la transmisión. A continuación se muestra un script de muestra vulnerable a esto:
 
 ```solidity
 // Pseudo-code, may not compile.
@@ -234,7 +234,7 @@ contract VulnerableScript is Script {
 }
 ```
 
-1. For scripts that read from JSON input files, put the input files in `script/input/<chainID>/<description>.json`. Then have `run(string memory input)` (or take multiple string inputs if you need to read from multiple files) as the script's signature, and use the below method to read the JSON file.
+1. Para scripts que leen archivos de entrada JSON, coloque los archivos de entrada en formato `script/input/<chainID>/<description>.json`. Luego, tenga  `run(string memory input)` (o tome varias entradas de cadena si necesita leer varios archivos) como firma del script y utilice el método siguiente para leer el archivo JSON.
 
 ```solidity
 function readInput(string memory input) internal returns (string memory) {
@@ -245,33 +245,33 @@ function readInput(string memory input) internal returns (string memory) {
 }
 ```
 
-## Comments
+## Comentarios
 
-1. For public or external methods and variables, use [NatSpec](https://docs.soliditylang.org/en/latest/natspec-format.html) comments.
+1. Para variables y métodos públicos o externos, utilice los comentarios [NatSpec](https://docs.soliditylang.org/en/latest/natspec-format.html).
 
-   - `forge doc` will parse these to autogenerate documentation.
-   - Etherscan will display them in the contract UI.
+   - `forge doc` los analizará para generar automáticamente la documentación.
+   - Etherscan los mostrará en la interfaz de usuario del contrato.
 
-1. For simple NatSpec comments, consider just documenting params in the docstring, such as `` /// @notice Returns the sum of `x` and `y`. ``, instead of using `@param` tags.
+1. Para comentarios simples de NatSpec, considere documentar los parámetros en la cadena de documentación, como`` /// @notice Returns the sum of `x` and `y`. ``, en lugar de usar las etiquetas `@param`.
 
-1. For complex NatSpec comments, consider using a tool like [PlantUML](https://plantuml.com/ascii-art) to generate ASCII art diagrams to help explain complex aspects of the codebase.
+1. Para comentarios NatSpec complejos, considere usar una herramienta como [PlantUML](https://plantuml.com/ascii-art) para generar diagramas visuales de ASCII para ayudar a explicar aspectos complejos del código base.
 
-1. Any markdown in your comments will carry over properly when generating docs with `forge doc`, so structure comments with markdown when useful.
+1. Cualquier comentario hecho como _markdown_ , se trasladará correctamente a la documentacion al generarla con `forge doc`, así que estructure sus comentarios como _markdown's_  cuando sea apropiado.
 
    - Correcto: `` /// @notice Returns the sum of `x` and `y`. ``
    - Incorrecto: `/// @notice Returns the sum of x and y.`
 
-## Resources
+## Recursos
 
-Write more secure code and better tests:
+Escriba código más seguro y mejores pruebas:
 
 - [transmissions11/solcurity](https://github.com/transmissions11/solcurity)
 - [nascentxyz/simple-security-toolkit](https://github.com/nascentxyz/simple-security-toolkit)
 
-Foundry in Action:
+Foundry  en acción:
 
-- [awesome-foundry](https://github.com/crisgarner/awesome-foundry): A curated list of awesome of the Foundry development framework.
-- [Nomad Monorepo](https://github.com/nomad-xyz/monorepo): All the `contracts-*` packages. Correcto  example of using many Foundry features including fuzzing, `ffi` and various cheatcodes.
-- [Sablier V2 Core](https://github.com/sablier-labs/v2-core): Another Correcto  example of many Foundry features. Also a pioneer of the state tree testing approach, see the `*.tree` files.
-- [Uniswap Periphery](https://github.com/gakonst/v3-periphery-foundry): Correct example of using inheritance to isolate test fixtures.
-- [PRBMath](https://github.com/PaulRBerg/prb-math): A library for fixed-point arithmetic in Solidity, with many parameterized tests that harness Foundry.
+- [awesome-foundry](https://github.com/crisgarner/awesome-foundry): Una lista increible de recursos para acelerar y mejorar su desarrollo con Foundry.
+- [Nomad Monorepo](https://github.com/nomad-xyz/monorepo): Todos los paquetes de `contracts-*`. Aquí se encuentran ejemplos de como usar de forma apropiada muchas de las capacidades de Foundry, como puede ser el caso de _fuzzing_, de `ffi` y algunos de los _cheatcodes_.
+- [Sablier V2 Core](https://github.com/sablier-labs/v2-core): Otro ejemplo del uso correcto de muchas funciones de Foundry. También es pionero en el enfoque de prueba de árbol de estados; consulte los archivos `*.tree`.
+- [Uniswap Periphery](https://github.com/gakonst/v3-periphery-foundry): Ejemplo correcto del uso de la herencia aislada para _suites_ de prueba.
+- [PRBMath](https://github.com/PaulRBerg/prb-math):Una biblioteca para aritmética de coma fija en Solidity, con muchas pruebas parametrizadas que aprovechan Foundry.
