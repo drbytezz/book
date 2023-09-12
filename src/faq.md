@@ -1,91 +1,90 @@
 ## FAQ
 
-This is a collection of common questions and answers. If you do not find your question listed here, hop in the [Telegram support channel][tg-support]
-and let us help you!
+Esta es una colección de preguntas y respuestas frecuentes. Si no encuentra su pregunta aquí, ingrese al [Telegram support channel][tg-support]
+y ¡déjanos ayudarte!
 
-### `libusb` Error When Running `forge`/`cast`
+### `libusb` Error Al Ejecutar  `forge`/`cast`
 
-If you are using the binaries as released, you may see the following error on MacOS:
+Si está utilizando los binarios tal como se publicaron, es posible que vea el siguiente error en MacOS:
 
 ```sh
 dyld: Library not loaded: /usr/local/opt/libusb/lib/libusb-1.0.0.dylib
 ```
 
-In order to fix this, you must install the `libusb` library:
+Para solucionar este problema, debe instalar la libreria `libusb`:
 
 ```sh
 brew install libusb
 ```
 
-### Out of Date `GLIBC` Error:
+### Error `GLIBC` Anticuado :
 
-If you run into an error resembling the following after using `foundryup`:
+Si se encuentra con un error similar al siguiente después de usar`foundryup`:
 
 ```sh
 forge: /lib/x86_64-linux-gnu/libc.so.6: version 'GLIBC_2.29' not found (required by forge)
 ```
 
-There are 2 workarounds:
+Existen 2 soluciones:
 
-1. [Building from source](./getting-started/installation.md#building-from-source)
-2. [Using Docker](./getting-started/installation.md#using-foundry-with-docker)
+1. [Construirlo desde la fuente](./getting-started/installation.md#building-from-source)
+2. [Usar Docker](./getting-started/installation.md#using-foundry-with-docker)
 
-### Help! I can't see my logs
+### ¡Ayuda! No puedo ver mis registros
 
-Forge does not display logs by default. If you want to see logs from Hardhat's `console.log` or from DSTest-style `log_*` events,
-you need to run [`forge test`][forge-test] with verbosity 2 (`-vv`).
+Forge no muestra registros por defecto. Si desea ver registros de Hardhat del tipo `console.log` o eventos del estilo DSTest `log_*`,
+necesitas ejecutar [`forge test`][forge-test] con verbosidad 2 (`-vv`).
 
-If you want to see other events your contracts emit, you need to run with traces enabled.
-To do that, set the verbosity to 3 (`-vvv`) to see traces for failing tests, or 4 (`-vvvv`) to see traces for all tests.
+Si desea ver otros eventos que emiten sus contratos, debe ejecutarlos con los rastreos habilitados.
+Para hacer eso, establezca la verbosidad en 3 (`-vvv`) para ver rastros de pruebas fallidas, o 4 (`-vvvv`)para ver rastros de todas las pruebas.
 
-### My tests are failing and I don't know why
+### Mis pruebas fallan y no sé por qué.
 
-To gain better insight into why your tests are failing, try using traces. To enable traces, you need to increase the verbosity
-on [forge test][forge-test] to at least 3 (`-vvv`) but you can go as high as 5 (`-vvvvv`) for even more traces.
+Para obtener una mejor idea de por qué fallan las pruebas, intente utilizar seguimientos. Para habilitar los seguimientos, debe aumentar la verbosidad
+en [forge test][forge-test] a, por lo menos 3(`-vvv`), pero se puede ir tan alta como 5 (`-vvvvv`) para ver aún más rastros.
 
-You can learn more about traces in our [Understanding Traces][traces] chapter.
+Puedes conocer más sobre las trazas en nuestro capitulo [Entendiendo las trazas][traces].
 
-### How do I use `console.log`?
+### ¿Cómo uso `console.log`?
 
-To use Hardhat's `console.log` you must add it to your project by copying the file over from [here][console-log].
+Para usar `console.log` incluido en Hardhat, debe agregarlo a su proyecto copiando el archivo desde [aquí][console-log].
 
-Alternatively, you can use [Forge Std][forge-std] which comes bundled with `console.log`. To use `console.log` from Forge Std,
-you have to import it:
+De forma alternativa, el lector puede usar [Forge Std][forge-std] el cual viene con la dependencia `console.log` incluida. Para usar  `console.log` desde Forge Std,tienes que importarlo:
 
 ```solidity
 import "forge-std/console.sol";
 ```
 
-### How do I run specific tests?
+### ¿Cómo ejecuto _test_ específicos?
 
-If you want to run only a few tests, you can use `--match-test` to filter test functions,
-`--match-contract` to filter test contracts, and `--match-path` to filter test files on [`forge test`][forge-test].
+Si desea ejecutar solo algunas pruebas, puede usar `--match-test` para filtrar funciones de prueba,
+`--match-contract` para filtrar contratos de prueba, y `--match-path` para filtrar archivos de prueba en [`forge test`][forge-test].
 
-### How do I use a specific Solidity compiler?
+### ¿Cómo uso un compilador específico de Solidity?
 
-Forge will try to auto-detect what Solidity compiler works for your project.
+Forge intentará detectar automáticamente qué compilador Solidity funciona para su proyecto.
 
-To use a specific Solidity compiler, you can set [`solc`][config-solc] in your [config file][config],
-or pass `--use solc:<version>` to a Forge command that supports it (e.g. [`forge build`][forge-build]
-or [`forge test`][forge-test]).
-Paths to a solc binary are also accepted. To use a specific local solc binary, you can set `solc = "<path to solc>"` in your config file, or pass `--use "<path to solc>"`.
-The solc version/path can also be set via the env variable `FOUNDRY_SOLC=<version/path>`, but the cli arg `--use` has priority.
+Para utilizar un compilador de Solidity específico, puede configurar [`solc`][config-solc] en su archivo [config][config],
+o pasar a forge el comando `--use solc:<version>` una version que tenga soport (e.j. [`forge build`][forge-build]
+o [`forge test`][forge-test]).
+También se aceptan rutas a un binario solc. Para utilizar un binario solc local específico, puede configurar`solc = "<path to solc>"` ien su archivo de configuración, o pasar el comando `--use "<path to solc>"`.
+La versión/ruta de solc también se puede configurar mediante la variable env `FOUNDRY_SOLC=<version/path>`,pero el argumento del CLI `--use` tiene prioridad.
 
-For example, if you have a project that supports all 0.7.x Solidity versions, but you want to compile with solc 0.7.0, you could use `forge build --use solc:0.7.0`.
+Por ejemplo, si tiene un proyecto que admite todas las versiones 0.7.x de Solidity, pero desea compilar con solc 0.7.0, puede usar`forge build --use solc:0.7.0`.
 
-### How do I fork from a live network?
+### ¿Cómo hago un _fork_ desde una red?
 
-To fork from a live network, pass `--fork-url <URL>` to [`forge test`][forge-test].
-You can also fork from a specific block using `--fork-block-number <BLOCK>`, which adds determinism to your test, and allows Forge to cache
-the chain data for that block.
+Para hacer un _fork_ desde una red , pase`--fork-url <URL>` al [`forge test`][forge-test].
+También se puede realizar _forks_ desde un bloque específico usando`--fork-block-number <BLOCK>`, lo que agrega determinismo a su prueba y permite a Forge almacenar en caché
+los datos de la cadena para ese bloque.
 
-For example, to fork from Ethereum mainnet at block 10,000,000 you could use: `forge test --fork-url $MAINNET_RPC_URL --fork-block-number 10000000`.
+Por ejemplo, para hacer _forks_ desde la red principal de Ethereum en el bloque 10.000.000, podrías usar:`forge test --fork-url $MAINNET_RPC_URL --fork-block-number 10000000`.
 
-### How do I add my own assertions?
+### ¿Cómo agrego mis propias afirmaciones?
 
-You can add your own assertions by creating your own base test contract and having that inherit from the test framework of your choice.
+Puede agregar sus propias afirmaciones creando su propio contrato de prueba base y haciéndolo heredar del marco de prueba de su elección.
 
-For example, if you use DSTest, you could create a base test contract like this:
+Por ejemplo, si usa DSTest, podría crear un contrato de prueba base como este:
 
 ```solidity
 contract TestBase is DSTest {
@@ -98,7 +97,7 @@ contract TestBase is DSTest {
 }
 ```
 
-You would then inherit from `TestBase` in your test contracts.
+Deberías heredar del contrato `TestBase` en todos tus contratos de _test_ para poder utilizar esta afirmacion customizada.
 
 ```solidity
 contract MyContractTest is TestBase {
@@ -108,29 +107,29 @@ contract MyContractTest is TestBase {
 }
 ```
 
-Similarly, if you use [Forge Std][forge-std], you can create a base test contract that inherits from `Test`.
+Del mismo modo, si utiliza [Forge Std][forge-std], puede crear un contrato de prueba base que herede de `Test`.
 
-For a good example of a base test contract that has helper methods and custom assertions, see [Solmate's `DSTestPlus`][dstestplus].
+Para ver un buen ejemplo de un contrato de prueba base que tiene métodos auxiliares y aserciones personalizadas, consulte [`DSTestPlus` de Solmate ][dstestplus].
 
-### How do I use Forge offline?
+### ¿Cómo uso Forge sin conexión?
 
-Forge will sometimes check for newer Solidity versions that fit your project. To use Forge offline, use the `--offline` flag.
+En ocasiones, Forge buscará versiones más nuevas de Solidity que se ajusten a su proyecto. Para utilizar Forge sin conexión, utilice la marca `--offline`.
 
-### I'm getting Solc errors
+### Recibo errores de Solc
 
-[solc-bin](https://binaries.soliditylang.org/) doesn't offer static builds for apple silicon. Foundry relies on [svm](https://github.com/roynalnaruto/svm-rs) to install native builds for apple silicon.
+[solc-bin](https://binaries.soliditylang.org/) no ofrece compilaciones estáticas para Apple Silicon. Foundry se basa en [svm](https://github.com/roynalnaruto/svm-rs)para instalar compilaciones nativas para dichos dispositivos.
 
-All solc versions are installed under `~/.svm/`. If you encounter solc related errors, such as `SolcError: ...` please to nuke `~/.svm/` and try again, this will trigger a fresh install and usually resolves the issue.
+Todas las versiones de solc se instalan bajo `~/.svm/`. Si encuentra errores relacionados con solc, como `SolcError: ...`, intente eliminar  `~/.svm/` e inténtelo de nuevo, esto activará una nueva instalación y normalmente resuelve el problema.
 
-If you're on apple silicon, please ensure the [`z3` theorem prover](https://github.com/Z3Prover/z3) is installed: `brew install z3`
+Si utiliza Apple Silicon, asegúrese de que la [validacion del teorema `z3`](https://github.com/Z3Prover/z3) esté instalado: `brew install z3`
 
-> **Note**: native apple silicon builds are only available from `0.8.5` upwards. If you need older versions, you must enable apple silicon rosetta to run them.
+> **Nota**: las versiones nativas de Apple Silicon solo están disponibles de la version `0.8.5` en adelante. Si necesita versiones anteriores, debe habilitar Apple Silicon Rosetta para ejecutarlas.
 
-### Forge fails in JavaScript monorepos (`pnpm`)
+### Forge falla en monorepos de JavaScript (`pnpm`)
 
-Managers like `pnpm` use symlinks to manage `node_modules` folders.
+Los administradores como `pnpm` usan enlaces simbólicos para administrar las carpetas `node_modules`.
 
-A common layout may look like:
+Un patron común puede verse así:
 
 ```text
 ├── contracts
@@ -146,9 +145,9 @@ A common layout may look like:
 ├── pnpm-workspace.yaml
 ```
 
-Where the Foundry workspace is in `./contracts`, but packages in `./contracts/node_modules` are symlinked to `./node_modules`.
+Dónde el espacio de trabajo de Foundry está en `./contracts`, pero los paquetes instalados se encuentran en `./contracts/node_modules` los cuales se vinculan de forma simbolica a  `./node_modules`.
 
-When running `forge build` in `./contracts/node_modules`, this can lead to an error like:
+AL momento de ejecutar `forge build` en `./contracts/node_modules`, esto puede provocar un error como:
 
 ```console
 error[6275]: ParserError: Source "node_modules/@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol" not found: File outside of allowed directories. The following are allowed: "<repo>/contracts", "<repo>/contracts/contracts", "<repo>/contracts/lib".
@@ -157,41 +156,41 @@ error[6275]: ParserError: Source "node_modules/@openzeppelin/contracts/utils/cry
 8 | import "../../../utils/cryptography/draft-EIP712.sol";
 ```
 
-This error happens when `solc` was able to resolve symlinked files, but they're outside the Foundry workspace (`./contracts`).
+Este error aparece cuando `solc` es capaz de resolver el vinculo entre los archivos, pero estos se encuentran por fuera del entorno de trabajo de Foundry (`./contracts`).
 
-Adding `node_modules` to `allow_paths` in `foundry.toml` grants solc access to that directory, and it will be able to read it:
+Si usted agrega `node_modules` a `allow_paths` en `foundry.toml`, usted garantiza el acceso a solc a dicho directorio, y este va a ser capaz de utilizar el contenido del mismo:
 
 ```toml
 # This translates to `solc --allow-paths ../node_modules`
 allow_paths = ["../node_modules"]
 ```
 
-Note that the path is relative to the Foundry workspace. See also [solc allowed-paths](https://docs.soliditylang.org/en/latest/path-resolution.html#allowed-paths)
+Tenga en cuenta que la ruta es relativa al entorno de trabajo de Foundry. Vease también las[rutas permitidas para solc](https://docs.soliditylang.org/en/latest/path-resolution.html#allowed-paths)
 
-### I'm getting `Permission denied (os error 13)`
+### Recibo `Permission denied (os error 13)`
 
-If you see an error like
+Si ves un error como
 
 ```console
 Failed to create artifact parent folder "/.../MyProject/out/IsolationModeMagic.sol": Permission denied (os error 13)
 ```
 
-Then there's likely a folder permission issue. Ensure `user` has write access in the project root's folder.
+Entonces es probable que haya un problema con los permisos de la carpeta. Asegúrese de que el `usuario` tenga acceso de escritura en la carpeta raíz del proyecto.
 
-It has been [reported](https://github.com/foundry-rs/foundry/issues/3268) that on linux, canonicalizing paths can result in weird paths (`/_1/...`). This can be resolved by nuking the entire project folder and initializing again.
+Se ha [reportado](https://github.com/foundry-rs/foundry/issues/3268) que en linux, that on linux, canonicalizar rutas puede resultar en rutas extrañas (`/_1/...`). Esto se puede resolver eliminando toda la carpeta del proyecto e inicializándola nuevamente.
 
-### Connection refused when run `forge build` .
+### Conexión rechazada al ejecutar `forge build` .
 
-If you're unable to access github URLs called by `forge build`, you will see an error like
+Si no puede acceder a las URL de github llamadas por `forge build`, verá un error como
 
 ```console
 Error:
 error sending request for url (https://raw.githubusercontent.com/roynalnaruto/solc-builds/ff4ea8a7bbde4488428de69f2c40a7fc56184f5e/macosx/aarch64/list.json): error trying to connect: tcp connect error: Connection refused (os error 61)
 ```
 
-Connection failed because access to the URL from your location may be restricted. To solve this, you should set proxy.
+La conexión falló porque el acceso a la URL desde su ubicación puede estar restringido. Para resolver esto, debes configurar el proxy.
 
-You could run `export http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890` first in the terminal then you will `forge build` successfully.
+Usted puede ejecutar `export http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890` primero en su terminal, y luego ejecutar  `forge build` de forma exitosa.
 
 [tg-support]: https://t.me/foundry_support
 [forge-test]: ./reference/forge/forge-test.md
