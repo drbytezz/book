@@ -15,7 +15,7 @@ Los largos, como por ejemplo, los cheatcodes van despues
 - misc [ok]
 - projects [ok]
 - tutoriales []
-- FAQ       []
+- FAQ       [ok]
 - cheatcodes  []
 - forge []
 - reference []

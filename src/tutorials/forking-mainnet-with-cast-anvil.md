@@ -1,39 +1,39 @@
-## Forking Mainnet with Cast and Anvil
+## _Forks_ de _Mainnet_ usando Cast y Anvil
 
-### Introduction
+### Introducción
 
-By combining [Anvil][anvil] and [Cast][cast], you can fork and test by interacting with contracts on a real network. The goal of this tutorial is to show you how to transfer Dai tokens from someone who holds Dai to an account created by Anvil.
+AL combinar[Anvil][anvil] y [Cast][cast],se puede realizar _forks_ y hacer pruebas interactuando con contratos en una red real. El objetivo de este tutorial es mostrarle cómo transferir tokens Dai de alguien que posee Dai a una cuenta creada por Anvil.
 
 ### Set Up
 
-Let's start by forking mainnet.
+Comencemos con un _fork_ de la red principal.
 
 ```sh
 anvil --fork-url https://mainnet.infura.io/v3/$INFURA_KEY
 ```
 
-You will see 10 accounts are created with their public and private keys. We will work with `0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266` (Let's call this user Alice).
+Verás que se crean 10 cuentas con sus claves públicas y privadas. Nosotros trabajaremos con `0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266` (Llamemosle  Martina).
 
-### Transferring Dai
+### Transferir dai
 
-Go to Etherscan and search for holders of Dai tokens ([here](https://etherscan.io/token/0x6b175474e89094c44da98b954eedeac495271d0f#balances)). Let's pick a random account. In this example we will be using `0xad0135af20fa82e106607257143d0060a7eb5cbf`. Let's export our contracts and accounts as environment variables:
+Vaya a Etherscan y busque alquien que posea tokens Dai ([here](https://etherscan.io/token/0x6b175474e89094c44da98b954eedeac495271d0f#balances)). Escojamos una cuenta al azar. En este ejemplo estaremos utilizando`0xad0135af20fa82e106607257143d0060a7eb5cbf`. Exportemos nuestros contratos y cuentas como variables de entorno (`.env`):
 
 ```sh
-export ALICE=0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266
+export MARTI=0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266
 export DAI=0x6b175474e89094c44da98b954eedeac495271d0f
 export LUCKY_USER=0xad0135af20fa82e106607257143d0060a7eb5cbf
 ```
 
-We can check Alice's balance using [`cast call`][cast-call]:
+Revisemos el balance de Martina usando [`cast call`][cast-call]:
 
 ```sh
 $ cast call $DAI \
   "balanceOf(address)(uint256)" \
-  $ALICE
+  $MARTI
 0
 ```
 
-Similarly, we can also check our lucky user's balance using `cast call`:
+Del mismo modo, también podemos consultar el balance de nuestro afortunado usuario usando `cast call`:
 
 ```sh
 $ cast call $DAI \
@@ -42,7 +42,7 @@ $ cast call $DAI \
 71686045944718512103110072
 ```
 
-Let's transfer some tokens from the lucky user to Alice using [`cast send`][cast-send]:
+Hagamos una transferencia desde del usuario afortunado a Martina usando [`cast send`][cast-send]:
 
 ```sh
 # This calls Anvil and lets us impersonate our lucky user
@@ -51,19 +51,19 @@ $ cast send $DAI \
 --unlocked \
 --from $LUCKY_USER \
   "transfer(address,uint256)(bool)" \
-  $ALICE \
+  $MARTI \
   1686045944718512103110072
 blockHash               0xbf31c45f6935a0714bb4f709b5e3850ab0cc2f8bffe895fefb653d154e0aa062
 blockNumber             15052891
 ...
 ```
 
-Let's check that the transfer worked:
+Comprobemos que la transferencia funcionó:
 
 ```sh
 cast call $DAI \
   "balanceOf(address)(uint256)" \
-  $ALICE
+  $MARTI
 1686045944718512103110072
 
 $ cast call $DAI \
